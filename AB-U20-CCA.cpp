@@ -7,6 +7,6 @@ using namespace std;
 
 int main()
 {
-	cout << "Hello CMake coming from Unit 20." << endl;
+	cout << "Hello CMake coming from Unit 20" << endl;
 	return 0;
 }
