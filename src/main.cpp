@@ -7,6 +7,7 @@
 //#include "menuCitas.h"
 //#include "menuReportes.h"
 //#include "menuBackup.h"
+#include "limpiarPantalla.h"
 
 bool deseaSalir() {
 	char opcion; // Para que solo acepte un caracter
@@ -40,7 +41,8 @@ int main() {
 	setlocale(LC_CTYPE, "Spanish");
 	int opcion = 0;
 	while (opcion != 5) {
-		clear
+		limpiarPantalla();
+		std::cout << "\n";
 		std::cout << "***********************************************\n";
 		std::cout << "       SIMULADOR DE GESTIÓN HOSPITALARIA\n";
 		std::cout << "***********************************************\n";
@@ -74,7 +76,8 @@ int main() {
 			case 0: 
 				salir();
 				break;
-		default: std::cout << "Opción invalida, introduzca un número del 0 al 5.\n";
+			default: 
+				std::cout << "Opción inválida, introduzca un número del 0 al 5.\n";
 		}
 	}
 }

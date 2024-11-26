@@ -12,7 +12,27 @@ endif()
 project ("AB-U20-CCA")
 
 # Agregue un origen al ejecutable de este proyecto.
-add_executable (AB-U20-CCA "AB-U20-CCA.cpp" "AB-U20-CCA.h")
+set(PACIENTE_FILES src/menuPacientes.cpp)
+
+set(MEDICO_FILES src/menuMedico.cpp)
+
+set(CITAS_FILES src/menuCitas.cpp)
+
+set(REPORTE_FILES src/menuReportes.cpp)
+
+set(BACKUP_FILES src/menuBackup.cpp)
+
+set(COMUNES_FILES src/limpiarPantalla.cpp)
+
+add_executable (AB-U20-CCA 
+	"src/main.cpp" 
+	${PACIENTE_FILES}
+	${MEDICO_FILES}
+	${CITAS_FILES}
+	${REPORTE_FILES}
+	${BACKUP_FILES}
+	${COMUNES_FILES}
+)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET AB-U20-CCA PROPERTY CXX_STANDARD 20)
