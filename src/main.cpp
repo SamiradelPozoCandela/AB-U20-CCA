@@ -79,8 +79,8 @@ int main() {
 	}
 }
 
-//case 1: std::cout << "submenuPacientes(); salir();"; break;
-//case 2: std::cout << "submenuMedicos(); salir();"; break;
-//case 3: std::cout << "submenuCitas(); salir();"; break;
-//case 4: std::cout << "submenuReportes(); salir();"; break;
-//case 5: std::cout << "submenuBackup(); salir();"; break;
+//case 1: submenuPacientes(); salir(); break;
+//case 2: submenuMedicos(); salir(); break;
+//case 3: submenuCitas(); salir(); break;
+//case 4: submenuReportes(); salir(); break;
+//case 5: submenuBackup(); salir(); break;
