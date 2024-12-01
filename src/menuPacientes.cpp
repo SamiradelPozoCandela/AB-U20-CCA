@@ -1,10 +1,12 @@
 #include <iostream>
 #include <locale.h> //admita caracteres especiales y tildes
 #include "../include/menuPacientes.h"
-#include "../include/limpiarPantalla.h"
+#include "../include/Pacientes.h"
+#include "../include/funciones_comunes.h"
 
 void submenuPacientes() {
 	setlocale(LC_CTYPE, "Spanish");
+	Pacientes pacientes;
 	int opcion;
 	while (true) {
 		limpiarPantalla();
@@ -23,10 +25,16 @@ void submenuPacientes() {
 
 		switch (opcion) {
 		case 1:
+			pacientes.agregarPaciente();
+			salir();
 			break;
 		case 2:
+			pacientes.editarPaciente();
+			salir();
 			break;
 		case 3:
+			pacientes.buscarPaciente();
+			salir();
 			break;
 		case 0:
 			return;
@@ -36,3 +44,7 @@ void submenuPacientes() {
 	}
 
 }
+
+
+
+
