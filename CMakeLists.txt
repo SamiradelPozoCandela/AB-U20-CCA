@@ -22,7 +22,7 @@ set(REPORTE_FILES src/menuReportes.cpp)
 
 set(BACKUP_FILES src/menuBackup.cpp)
 
-set(COMUNES_FILES src/limpiarPantalla.cpp)
+set(COMUNES_FILES src/funciones_comunes.cpp)
 
 add_executable (AB-U20-CCA 
 	"src/main.cpp" 

@@ -1,46 +1,19 @@
 #include <iostream>
 #include <cctype>
 #include <locale.h> //admita caracteres especiales y tildes
-#include "main.h"
-//#include "menuPacientes.h"
-//#include "menuMedico.h"
-//#include "menuCitas.h"
-//#include "menuReportes.h"
-//#include "menuBackup.h"
-#include "limpiarPantalla.h"
-
-bool deseaSalir() {
-	char opcion; // Para que solo acepte un caracter
-	do {
-		std::cout << "\n";
-		std::cout << "¿Desea salir? [S|N]: ";
-		std::cin >> opcion;
-		opcion = toupper(opcion); // Pasar el valor dado a mayúscula
-
-		if (opcion == 'S') {
-			return true; 
-		}
-		else if (opcion == 'N') {
-			return false;
-		}
-		else {
-			std::cout << "Opción inválida. Por favor, ingrese 'S' o 'N'.\n";
-		}
-	} while (opcion != 'S' && opcion != 'N');
-	return false;
-}
-
-void salir() {
-	if (deseaSalir()) {
-		exit(0);
-	}
-}
+#include "../include/main.h"
+#include "../include/menuPacientes.h"
+#include "../include/menuMedico.h"
+#include "../include/menuCitas.h"
+#include "../include/menuReportes.h"
+#include "../include/menuBackup.h"
+#include "../include/funciones_comunes.h"
 
 
 int main() {
 	setlocale(LC_CTYPE, "Spanish");
-	int opcion = 0;
-	while (opcion != 5) {
+	int opcion = -1;
+	while (opcion != 0) {
 		limpiarPantalla();
 		std::cout << "\n";
 		std::cout << "***********************************************\n";
@@ -59,31 +32,27 @@ int main() {
 
 		switch (opcion) {
 			case 1: 
-				std::cout << ""; 
+				submenuPacientes(); 
 				break;
 			case 2: 
-				std::cout << ""; 
+				submenuMedicos();
 				break;
 			case 3: 
-				std::cout << ""; 
+				submenuCitas();
 				break;
 			case 4: 
-				std::cout << ""; 
+				submenuReportes();
 				break;
 			case 5: 
-				std::cout << ""; 
+				submenuBackup();
 				break;
 			case 0: 
 				salir();
 				break;
 			default: 
-				std::cout << "Opción inválida, introduzca un número del 0 al 5.\n";
+				std::cout << "\n";
+				std::cout << "Opción inválida, introduzca un número del 0 al 5. "; 
+				pausa();
 		}
 	}
 }
-
-//case 1: submenuPacientes(); salir(); break;
-//case 2: submenuMedicos(); salir(); break;
-//case 3: submenuCitas(); salir(); break;
-//case 4: submenuReportes(); salir(); break;
-//case 5: submenuBackup(); salir(); break;
