@@ -12,15 +12,15 @@ endif()
 project ("AB-U20-CCA")
 
 # Agregue un origen al ejecutable de este proyecto.
-set(PACIENTE_FILES src/menuPacientes.cpp)
+set(PACIENTE_FILES src/menuPacientes.cpp src/Pacientes.cpp)
 
-set(MEDICO_FILES src/menuMedico.cpp)
+set(MEDICO_FILES src/menuMedico.cpp src/Medicos.cpp)
 
-set(CITAS_FILES src/menuCitas.cpp)
+set(CITAS_FILES src/menuCitas.cpp src/Citas.cpp)
 
-set(REPORTE_FILES src/menuReportes.cpp)
+set(REPORTE_FILES src/menuReportes.cpp src/Reportes.cpp)
 
-set(BACKUP_FILES src/menuBackup.cpp)
+set(BACKUP_FILES src/menuBackup.cpp src/Backup.cpp)
 
 set(COMUNES_FILES src/funciones_comunes.cpp)
 

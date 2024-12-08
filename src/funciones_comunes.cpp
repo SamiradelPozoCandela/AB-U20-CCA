@@ -1,5 +1,16 @@
 #include <iostream>
+#include <string>
 #include "../include/funciones_comunes.h"
+
+// Función para convertir strings en int
+int string2int(const std::string& input) {
+	if (!input.empty()) {
+		return std::stoi(input);
+	}
+	else {
+		return 0;
+	}
+}
 
 // Función limpiar pantalla
 #ifdef _WIN32
