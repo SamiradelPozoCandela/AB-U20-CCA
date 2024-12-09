@@ -26,16 +26,22 @@ void Pacientes::agregarPaciente() {
 	std::cout << "Apellidos: ";
 	std::getline(std::cin,apellidos);
 
-	std::cout << "Teléfono: ";
-	std::getline(std::cin, inputTelefono); 
-	telefono = string2int(inputTelefono); // Convertir la string a int 
+	do {
+		std::cout << "Teléfono: ";
+		std::getline(std::cin, inputTelefono); 
+		esNumero(inputTelefono,9);
+		telefono = string2int(inputTelefono); // Convertir la string a int 
+	}while(true);
 
 	std::cout << "Dirección: ";
 	std::getline(std::cin,direccion);
 
-	std::cout << "CP: ";
-	std::getline(std::cin, inputCp);
-	cp = string2int(inputCp); // Convertir la string a int 
+	do {
+		std::cout << "CP: ";
+		std::getline(std::cin, inputCp);
+		esNumero(inputCp, 5);
+		cp = string2int(inputCp); // Convertir la string a int 
+	} while (true);
 
 	std::cout << "Localidad: ";
 	std::getline(std::cin, localidad);

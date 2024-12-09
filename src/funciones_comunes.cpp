@@ -2,7 +2,25 @@
 #include <string>
 #include "../include/funciones_comunes.h"
 
-// Función para convertir strings en int
+// Función para comprobar que introduce numeros y no caracteres
+// valor (string) --> valor introducido 
+// longitudEsperada (int) --> el número de digitos que debería contener el valor introducido
+// Retorna --> True si es Numero y longitud correcta, y False de lo contrario
+bool esNumero(const std::string& valor, int longitudEsperada) {
+	if (valor.length() != longitudEsperada) {
+		return false;  
+	}
+	for (char caracter : valor) {
+		if (!isdigit(caracter)) {
+			return false;
+		}
+	}
+	return true;
+}
+
+
+// Función para convertir el valor introducido tipo string en int
+// input (string) --> valor introducido 
 int string2int(const std::string& input) {
 	if (!input.empty()) {
 		return std::stoi(input);
