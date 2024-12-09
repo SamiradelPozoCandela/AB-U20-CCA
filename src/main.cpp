@@ -1,8 +1,11 @@
 #include <iostream>
 #include <cctype>
+#include <vector>
 #include <locale.h> //admita caracteres especiales y tildes
+#include <filesystem>
 #include "../include/main.h"
 #include "../include/menuPacientes.h"
+#include "../include/Pacientes.h"
 #include "../include/menuMedico.h"
 #include "../include/menuCitas.h"
 #include "../include/menuReportes.h"
@@ -12,6 +15,10 @@
 
 int main() {
 	setlocale(LC_CTYPE, "Spanish");
+
+	// Declarar la ruta donde se almacenarán los datos de los Pacientes
+	std::string fichPacientes = "../../../csv/Pacientes.csv";
+
 	int opcion = -1;
 	while (opcion != 0) {
 		limpiarPantalla();
@@ -32,7 +39,7 @@ int main() {
 
 		switch (opcion) {
 			case 1: 
-				submenuPacientes(); 
+				submenuPacientes(fichPacientes); // Necesario compartir el fichero para que pueda ser usado en el resto de .cpp
 				break;
 			case 2: 
 				submenuMedicos();

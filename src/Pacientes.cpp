@@ -1,10 +1,10 @@
 #include <iostream>
-
 #include <cctype>
+#include <fstream>
 #include "../include/Pacientes.h"
 #include "../include/funciones_comunes.h"
 
-void Pacientes::agregarPaciente() {
+void Pacientes::agregarPaciente(const std::string& fichPacientes) {
 	
 	string inputTelefono;
 	string inputCp;
@@ -17,8 +17,9 @@ void Pacientes::agregarPaciente() {
 
 	std::cout << "DNI: ";
 	// Para evitar que DNI y Nombre se impriman a la vez, se limpia la entrada de datos
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	std::getline(std::cin, dni);
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
+	
 
 	std::cout << "Nombre: ";
 	std::getline(std::cin,nombre);
@@ -29,8 +30,13 @@ void Pacientes::agregarPaciente() {
 	do {
 		std::cout << "Teléfono: ";
 		std::getline(std::cin, inputTelefono); 
-		esNumero(inputTelefono,9);
-		telefono = string2int(inputTelefono); // Convertir la string a int 
+		if (esNumero(inputTelefono, 9)) {
+			telefono = string2int(inputTelefono); // Convertir la string a int
+			break;
+		}
+		else {
+			std::cout << "\nError: número de teléfono inválido. Debe tener 9 dígitos y solo contener números.\n";
+		} 
 	}while(true);
 
 	std::cout << "Dirección: ";
@@ -39,8 +45,13 @@ void Pacientes::agregarPaciente() {
 	do {
 		std::cout << "CP: ";
 		std::getline(std::cin, inputCp);
-		esNumero(inputCp, 5);
-		cp = string2int(inputCp); // Convertir la string a int 
+		if (esNumero(inputCp, 5)){
+			cp = string2int(inputCp); // Convertir la string a int
+			break;
+		}
+		else {
+			std::cout << "\nError: número de código postal inválido. Debe tener 5 dígitos y solo contener números.\n";
+		}
 	} while (true);
 
 	std::cout << "Localidad: ";
@@ -81,19 +92,26 @@ void Pacientes::agregarPaciente() {
 	siNo = toupper(siNo);
 
 	if (siNo == 'S') {
-		std::cout << "Entra" << "\n";
-		std::cout << "\n"
-				  << dni << "," 
-				  << nombre << "," 
-				  << apellidos << "," 
-				  << telefono << ","
-				  << direccion << "," 
-				  << cp << "," 
-				  << localidad << "," 
-				  << nacionalidad << ","
-				  << (altaBaja == "A" ? "Alta" : "Baja") << ","
-				  << (enfermedadCronica == 1 ? "true" : "false");
-		std::cout << "\nEl paciente se ha registrado correctamente.\n";
+		// Abrir fichero Pacientes.csv
+		std::ofstream archivo(fichPacientes, std::ios::app);
+		if (archivo.is_open()) {
+			archivo << "\n"
+					<< dni << "," 
+					<< nombre << "," 
+					<< apellidos << "," 
+					<< telefono << ","
+					<< direccion << "," 
+					<< cp << "," 
+					<< localidad << "," 
+					<< nacionalidad << ","
+					<< (altaBaja == "A" ? "Alta" : "Baja") << ","
+					<< (enfermedadCronica == 1 ? "true" : "false");
+			archivo.close();
+			std::cout << "\nEl paciente se ha registrado correctamente.\n";
+		}
+		else {
+			std::cerr << "Error: No se ha podido registrar al paciente.\n";
+		}
 	}
 	else {
 		std::cout << "Los cambios no se han guardado.\n";

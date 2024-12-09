@@ -4,9 +4,11 @@
 #include "../include/Pacientes.h"
 #include "../include/funciones_comunes.h"
 
-void submenuPacientes() {
+void submenuPacientes(const std::string& fichPacientes) {
 	setlocale(LC_CTYPE, "Spanish");
+
 	Pacientes pacientes;
+
 	int opcion;
 	while (true) {
 		limpiarPantalla();
@@ -25,7 +27,7 @@ void submenuPacientes() {
 
 		switch (opcion) {
 		case 1:
-			pacientes.agregarPaciente();
+			pacientes.agregarPaciente(fichPacientes);
 			salir();
 			break;
 		case 2:

@@ -1,0 +1,3 @@
+dni,nombre,apellidos,telefono,direccion,cp,localidad,nacionalidad,estado,enfermedadCronica
+
+123456789Y,Pepito,Grillo,654789123,Avenida Madrid,54621,Madrid,Espa¤ola,Baja,true

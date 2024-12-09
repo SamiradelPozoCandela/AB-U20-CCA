@@ -19,7 +19,7 @@ private:
     bool enfermedadCronica;
 
 public:
-    void agregarPaciente();
+    void agregarPaciente(const std::string& fichPacientes);
     void editarPaciente();
     void buscarPaciente();
 };
