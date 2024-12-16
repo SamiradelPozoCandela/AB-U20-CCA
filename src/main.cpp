@@ -19,6 +19,9 @@ int main() {
 	// Declarar la ruta donde se almacenarán los datos de los Pacientes
 	std::string fichPacientes = "../../../csv/Pacientes.csv";
 
+	// Declarar el vector donde se almacenaran las filas de usuarios
+	std::vector<Pacientes> listaPacientes;
+
 	int opcion = -1;
 	while (opcion != 0) {
 		limpiarPantalla();
@@ -39,7 +42,7 @@ int main() {
 
 		switch (opcion) {
 			case 1: 
-				submenuPacientes(fichPacientes); // Necesario compartir el fichero para que pueda ser usado en el resto de .cpp
+				submenuPacientes(fichPacientes,listaPacientes); // Necesario compartir el fichero para que pueda ser usado en el resto de .cpp
 				break;
 			case 2: 
 				submenuMedicos();

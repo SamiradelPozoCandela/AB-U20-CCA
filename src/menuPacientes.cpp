@@ -1,10 +1,12 @@
 #include <iostream>
 #include <locale.h> //admita caracteres especiales y tildes
+#include <vector>
+#include <cctype>
 #include "../include/menuPacientes.h"
 #include "../include/Pacientes.h"
 #include "../include/funciones_comunes.h"
 
-void submenuPacientes(const std::string& fichPacientes) {
+void submenuPacientes(const std::string& fichPacientes, std::vector<Pacientes> listaPacientes) {
 	setlocale(LC_CTYPE, "Spanish");
 
 	Pacientes pacientes;
@@ -27,7 +29,7 @@ void submenuPacientes(const std::string& fichPacientes) {
 
 		switch (opcion) {
 		case 1:
-			pacientes.agregarPaciente(fichPacientes);
+			pacientes.agregarPaciente(fichPacientes, listaPacientes);
 			salir();
 			break;
 		case 2:

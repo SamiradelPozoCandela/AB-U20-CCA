@@ -20,8 +20,8 @@ private:
 
 public:
     void agregarPaciente(const std::string& fichPacientes);
-    void editarPaciente();
-    void buscarPaciente();
+    void editarPaciente(std::vector<Pacientes> listaPacientes);
+    void buscarPaciente(std::vector<Pacientes> listaPacientes);
 };
 
 #endif

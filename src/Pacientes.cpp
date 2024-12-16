@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cctype>
+#include <vector>
 #include <fstream>
 #include "../include/Pacientes.h"
 #include "../include/funciones_comunes.h"
@@ -118,11 +119,11 @@ void Pacientes::agregarPaciente(const std::string& fichPacientes) {
 	}
 }
 
-void Pacientes::editarPaciente() {
+void Pacientes::editarPaciente(std::vector<Pacientes> listaPacientes) {
 
 }
 
-void Pacientes::buscarPaciente() {
+void Pacientes::buscarPaciente(std::vector<Pacientes> listaPacientes) {
 
 }
 

@@ -3,6 +3,6 @@
 
 #include "../include/Pacientes.h" 
 
-void submenuPacientes(const std::string& fichPacientes);
+void submenuPacientes(const std::string& fichPacientes, std::vector<Pacientes> listaPacientes);
 
 #endif
