@@ -7,11 +7,8 @@
 
 void Pacientes::agregarPaciente(const std::string& fichPacientes) {
 	
-	string inputTelefono;
-	string inputCp;
-	string inputAltaBaja;
-	string inputEnfermedadCronica;
-	char siNo;
+	string inputTelefono,inputCp,inputAltaBaja,inputEnfermedadCronica;
+	char siNo, respuesta;
 
 	limpiarPantalla();
 	std::cout << "Introduce los datos del nuevo paciente\n\n";
@@ -73,7 +70,7 @@ void Pacientes::agregarPaciente(const std::string& fichPacientes) {
 	do {
 		std::cout << "¿Enfermedad crónica? [S|N]: ";
 		std::getline(std::cin, inputEnfermedadCronica);
-		char respuesta = toupper(inputEnfermedadCronica[0]); // Por si acaso, solo coger el primer caracter para pasarlo a mayúsculas
+		respuesta = toupper(inputEnfermedadCronica[0]); // Por si acaso, solo coger el primer caracter para pasarlo a mayúsculas
 		if (respuesta != 'S') {
 			enfermedadCronica = true;
 			break;
@@ -91,13 +88,13 @@ void Pacientes::agregarPaciente(const std::string& fichPacientes) {
 	std::cout << "¿Desea conservar los cambios? [S|N]: ";
 	std::cin >> siNo;
 	siNo = toupper(siNo);
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpiar buffer nuevamente
 
 	if (siNo == 'S') {
 		// Abrir fichero Pacientes.csv
 		std::ofstream archivo(fichPacientes, std::ios::app);
 		if (archivo.is_open()) {
-			archivo << "\n"
-					<< dni << "," 
+			archivo << dni << "," 
 					<< nombre << "," 
 					<< apellidos << "," 
 					<< telefono << ","
@@ -106,7 +103,7 @@ void Pacientes::agregarPaciente(const std::string& fichPacientes) {
 					<< localidad << "," 
 					<< nacionalidad << ","
 					<< (altaBaja == "A" ? "Alta" : "Baja") << ","
-					<< (enfermedadCronica == 1 ? "true" : "false");
+					<< (enfermedadCronica == 1 ? "true" : "false") << "\n";
 			archivo.close();
 			std::cout << "\nEl paciente se ha registrado correctamente.\n";
 		}
@@ -119,12 +116,156 @@ void Pacientes::agregarPaciente(const std::string& fichPacientes) {
 	}
 }
 
-void Pacientes::editarPaciente(std::vector<Pacientes> listaPacientes) {
+void Pacientes::editarPaciente(const std::string& fichPacientes,std::vector<Pacientes>& listaPacientes) {
+	string dniBuscar,linea,dniPaciente,nuevoNombre,nuevoApellido,nuevoTelefono,nuevaDireccion,nuevaCP,nuevaAltaBaja,inputAltaBaja,nuevaLocalidad,nuevaNacionalidad;
+	char respuesta;
+	bool encontrado = false;
 
+	std::ifstream archivo(fichPacientes);
+	std::vector<Pacientes> pacientesActualizados;
+
+	// Verificar que el archivo se abre correctamente
+	if (!archivo.is_open()) {
+		std::cerr << "Error al abrir el archivo." << fichPacientes  << std::endl;
+		return;
+	}
+
+	std::cout << "\nIntroduce el DNI del paciente a modificar: ";
+	//std::getline(std::cin, dniBuscar);
+	std::getline(std::cin >> std::ws, dniBuscar);
+
+	while (std::getline(archivo, linea)) {
+		std::stringstream ss(linea);
+		std::getline(ss, dniPaciente, ','); // Leer solo el DNI
+
+		if (dniPaciente == dniBuscar) {
+			encontrado = true;
+			Pacientes pacienteModificado = Pacientes::fromCSV(linea); // Cargar el paciente actual
+
+			nombre = dniBuscar;
+
+			// Ver los datos del paciente
+			std::cout << "\nDatos del paciente:\n" << linea << "\n";
+			std::cout << "\nIntroduce nuevos datos (deja vacío para mantener el actual):\n";
+
+			std::cout << "Nombre: ";
+			std::getline(std::cin, nuevoNombre);
+			if (!nuevoNombre.empty()) pacienteModificado.nombre = nuevoNombre;
+
+			std::cout << "Apellidos: ";
+			std::getline(std::cin, nuevoApellido);
+			if (!nuevoApellido.empty()) pacienteModificado.apellidos = nuevoApellido;
+
+			do {
+				std::cout << "Teléfono: ";
+				std::getline(std::cin, nuevoTelefono);
+				if (!nuevoTelefono.empty()) {
+					if (esNumero(nuevoTelefono, 9)) {
+						pacienteModificado.telefono = string2int(nuevoTelefono);
+						break;
+					}
+					else {
+						std::cout << "\nError: número de teléfono inválido. Debe tener 9 dígitos y solo contener números.\n";
+					}
+				}else{
+					break;
+				}
+			} while (true);
+			
+
+			std::cout << "Dirección: ";
+			std::getline(std::cin, nuevaDireccion);
+			if (!nuevaDireccion.empty()) pacienteModificado.direccion = nuevaDireccion;
+
+			do {
+				std::cout << "CP: ";
+				std::getline(std::cin, nuevaCP);
+				if (!nuevaCP.empty()) {
+					if (esNumero(nuevaCP, 5)) {
+						pacienteModificado.cp = string2int(nuevaCP);
+						break;
+					}
+					else {
+						std::cout << "\nError: número de código postal inválido. Debe tener 5 dígitos y solo contener números.\n";
+					}
+				}
+				else {
+					break;
+				}
+			} while (true);
+
+			std::cout << "Localidad: ";
+			std::getline(std::cin, nuevaLocalidad);
+			if (!nuevaLocalidad.empty()) localidad = nuevaLocalidad;
+
+			std::cout << "Nacionalidad: ";
+			std::getline(std::cin, nuevaNacionalidad);
+			if (!nuevaNacionalidad.empty()) pacienteModificado.nacionalidad = nuevaNacionalidad;
+
+			do {
+				std::cout << "Estado [Alta (A) | Baja (B)]: ";
+				std::getline(std::cin, nuevaAltaBaja);
+				if (!inputAltaBaja.empty()) {
+					inputAltaBaja = toupper(nuevaAltaBaja[0]); // Por si acaso, solo coger el primer caracter para pasarlo a mayúsculas
+					if (inputAltaBaja != "A" && inputAltaBaja != "B") {
+						std::cout << "Por favor, introduce 'A' para Alta o 'B' para Baja.\n";
+					}
+					else {
+						pacienteModificado.altaBaja = inputAltaBaja;
+						break;
+					}
+				}
+				else {
+					break;
+				}
+			} while (inputAltaBaja != "A" && inputAltaBaja != "B");
+
+			do {
+				std::cout << "¿Enfermedad crónica? [S|N]: ";
+				std::string nuevaEnfermedadCronica;
+				std::getline(std::cin, nuevaEnfermedadCronica);
+				if (!nuevaEnfermedadCronica.empty()) {
+					respuesta = toupper(nuevaEnfermedadCronica[0]); // Por si acaso, solo coger el primer caracter para pasarlo a mayúsculas
+					if (respuesta != 'S') {
+						pacienteModificado.enfermedadCronica = true;
+						break;
+					}
+					else if (respuesta != 'N') {
+						break;
+					}
+					else {
+						std::cout << "Por favor, introduce 'S' para Sí o 'N' para No.\n";
+					}
+				}
+				else {
+					break;
+				}
+			} while (true);
+
+			std::cout << "\nModificación guardada para el paciente con DNI: " << dniPaciente << std::endl;
+			pacientesActualizados.push_back(*this); // Agregar paciente modificado
+		}
+		else {
+			// Agregar el paciente no modificado
+			pacientesActualizados.push_back(Pacientes::fromCSV(linea));
+		}
+	}
+	archivo.close();
+
+	if (!encontrado) {
+		std::cout << "\nPaciente no encontrado.";
+		return;
+	}
+
+	// Guardar todos los pacientes de nuevo en el archivo
+	std::ofstream archivoSalida(fichPacientes, std::ios::trunc);
+	for (const auto& paciente : pacientesActualizados) {
+		archivoSalida << paciente.toCSV() << std::endl; // Créalo según tu implementación
+	}
+	archivoSalida.close();
 }
 
-void Pacientes::buscarPaciente(std::vector<Pacientes> listaPacientes) {
-
+void Pacientes::buscarPaciente(std::vector<Pacientes>& listaPacientes) {
+	
 }
-
 
