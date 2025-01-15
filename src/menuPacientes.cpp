@@ -10,7 +10,8 @@
 
 
 void submenuPacientes(const std::string& fichPacientes, std::vector<Pacientes>& listaPacientes) {
-	setlocale(LC_CTYPE, "Spanish");
+	// Textos en UTF-8
+	codificacionArchivos();
 
 	Pacientes pacientes;
 

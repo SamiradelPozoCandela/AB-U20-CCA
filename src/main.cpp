@@ -1,7 +1,6 @@
 #include <iostream>
 #include <cctype>
 #include <vector>
-#include <locale.h> //admita caracteres especiales y tildes
 #include <filesystem>
 #include "../include/main.h"
 #include "../include/menuPacientes.h"
@@ -14,7 +13,8 @@
 
 
 int main() {
-	setlocale(LC_CTYPE, "Spanish");
+	// Textos en UTF-8
+	codificacionArchivos();
 
 	// Declarar la ruta donde se almacenarán los datos de los Pacientes
 	std::string fichPacientes = "../../../csv/Pacientes.csv";

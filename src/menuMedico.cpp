@@ -4,7 +4,9 @@
 #include "../include/funciones_comunes.h"
 
 void submenuMedicos() {
-	setlocale(LC_CTYPE, "Spanish");
+	// Textos en UTF-8
+	codificacionArchivos();
+
 	int opcion;
 	while (true) {
 		limpiarPantalla();

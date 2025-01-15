@@ -1,10 +1,15 @@
 #include <iostream>
 #include <string>
+#include <locale.h> //admita caracteres especiales y tildes
 #include "../include/funciones_comunes.h"
 
-// Función para comprobar que introduce numeros y no caracteres
+#ifdef _WIN32
+	#include <windows.h>
+#endif
+
+// Función para comprobar que introduce números y no caracteres
 // valor (string) --> valor introducido 
-// longitudEsperada (int) --> el número de digitos que debería contener el valor introducido
+// longitudEsperada (int) --> el número de dígitos que debería contener el valor introducido
 // Retorna --> True si es Numero y longitud correcta, y False de lo contrario
 bool esNumero(const std::string& valor, int longitudEsperada) {
 	if (valor.length() != longitudEsperada) {
@@ -31,10 +36,6 @@ int string2int(const std::string& input) {
 }
 
 // Función limpiar pantalla
-#ifdef _WIN32
-#include<windows.h>
-#endif  
-
 void limpiarPantalla() {
 	#ifdef _WIN32
 		system("cls");
@@ -45,7 +46,7 @@ void limpiarPantalla() {
 
 // Función salir
 bool deseaSalir() {
-	char opcion; // Para que solo acepte un caracter
+	char opcion; // Para que solo acepte un carácter
 	do {
 		std::cout << "\n";
 		std::cout << "¿Desea salir? [S|N]: ";
@@ -75,4 +76,13 @@ void salir() {
 void pausa() {
 	system("pause");
 	return;
+}
+
+// Función para que admita caracteres especiales y tildes al imprimir por consola.
+// Tipo de texto UTF-8
+void codificacionArchivos() {
+	setlocale(LC_CTYPE, "Spanish");
+	#if !defined(_WIN32)
+		setlocale(LC_CTYPE, ".UTF-8");
+	#endif
 }

@@ -7,5 +7,6 @@ void salir();
 void pausa();
 int string2int(const std::string& input); 
 bool esNumero(const std::string& valor, int longitudEsperada);
+void codificacionArchivos();
 
 #endif

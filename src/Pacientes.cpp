@@ -10,6 +10,9 @@ void Pacientes::agregarPaciente(const std::string& fichPacientes) {
 	string inputTelefono,inputCp,inputAltaBaja,inputEnfermedadCronica;
 	char siNo, respuesta;
 
+	// Textos en UTF-8
+	codificacionArchivos();
+
 	limpiarPantalla();
 	std::cout << "Introduce los datos del nuevo paciente\n\n";
 
@@ -117,9 +120,12 @@ void Pacientes::agregarPaciente(const std::string& fichPacientes) {
 }
 
 void Pacientes::editarPaciente(const std::string& fichPacientes,std::vector<Pacientes>& listaPacientes) {
-	string dniBuscar,linea,dniPaciente,nuevoNombre,nuevoApellido,nuevoTelefono,nuevaDireccion,nuevaCP,nuevaAltaBaja,inputAltaBaja,nuevaLocalidad,nuevaNacionalidad;
+	string dniBuscar,linea,dniPaciente,nuevoDNI,nuevoNombre,nuevoApellido,nuevoTelefono,nuevaDireccion,nuevaCP,nuevaAltaBaja,inputAltaBaja,nuevaLocalidad,nuevaNacionalidad;
 	char respuesta;
 	bool encontrado = false;
+
+	// Textos en UTF-8
+	codificacionArchivos();
 
 	std::ifstream archivo(fichPacientes);
 	std::vector<Pacientes> pacientesActualizados;
@@ -131,7 +137,6 @@ void Pacientes::editarPaciente(const std::string& fichPacientes,std::vector<Paci
 	}
 
 	std::cout << "\nIntroduce el DNI del paciente a modificar: ";
-	//std::getline(std::cin, dniBuscar);
 	std::getline(std::cin >> std::ws, dniBuscar);
 
 	while (std::getline(archivo, linea)) {
@@ -142,11 +147,15 @@ void Pacientes::editarPaciente(const std::string& fichPacientes,std::vector<Paci
 			encontrado = true;
 			Pacientes pacienteModificado = Pacientes::fromCSV(linea); // Cargar el paciente actual
 
-			nombre = dniBuscar;
+			std::cout << pacienteModificado.telefono;
 
 			// Ver los datos del paciente
 			std::cout << "\nDatos del paciente:\n" << linea << "\n";
 			std::cout << "\nIntroduce nuevos datos (deja vacío para mantener el actual):\n";
+
+			std::cout << "DNI: ";
+			std::getline(std::cin, nuevoDNI);
+			if (!nuevoDNI.empty()) pacienteModificado.dni = nuevoDNI;
 
 			std::cout << "Nombre: ";
 			std::getline(std::cin, nuevoNombre);
@@ -243,7 +252,7 @@ void Pacientes::editarPaciente(const std::string& fichPacientes,std::vector<Paci
 			} while (true);
 
 			std::cout << "\nModificación guardada para el paciente con DNI: " << dniPaciente << std::endl;
-			pacientesActualizados.push_back(*this); // Agregar paciente modificado
+			pacientesActualizados.push_back(pacienteModificado); // Agregar paciente modificado
 		}
 		else {
 			// Agregar el paciente no modificado
@@ -266,6 +275,7 @@ void Pacientes::editarPaciente(const std::string& fichPacientes,std::vector<Paci
 }
 
 void Pacientes::buscarPaciente(std::vector<Pacientes>& listaPacientes) {
-	
+	// Textos en UTF-8
+	codificacionArchivos();
 }
 
