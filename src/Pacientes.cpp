@@ -274,8 +274,48 @@ void Pacientes::editarPaciente(const std::string& fichPacientes,std::vector<Paci
 	archivoSalida.close();
 }
 
-void Pacientes::buscarPaciente(std::vector<Pacientes>& listaPacientes) {
+void Pacientes::buscarPaciente(const std::string& fichPacientes, std::vector<Pacientes>& listaPacientes) {
+	string dniBuscar, linea, dniPaciente;
+	bool encontrado = false;
+
 	// Textos en UTF-8
 	codificacionArchivos();
+
+	// Abrir archivo
+	std::ifstream archivo(fichPacientes);
+
+	// Verificar si el archivo csv esta abierto
+	if (!archivo.is_open()) {
+		std::cerr << "Error al abrir el archivo: " << fichPacientes << std::endl;
+		return;
+	}
+
+	// Introducir el dni para buscar el paciente
+	std::cout << "\nIntroduce el DNI del paciente a buscar: ";
+	std::getline(std::cin >> std::ws, dniBuscar);
+
+	// Bucle que recorre linea por linea del archivo
+	while (std::getline(archivo, linea)) {
+		std::stringstream ss(linea);
+		std::getline(ss, dniPaciente, ','); // Leer solo el DNI
+
+		if (dniPaciente == dniBuscar) {
+			encontrado = true;
+			// Cargar el paciente encontrado
+			Pacientes pacienteEncontrado = Pacientes::fromCSV(linea);
+
+			// Mostrar los datos del paciente
+			std::cout << "\nDatos del paciente:\n" << linea << "\n";
+			break; 
+		}
+	}
+
+	// Cerrar el archivo
+	archivo.close(); 
+
+	if (!encontrado) {
+		std::cout << "\nPaciente no encontrado." << std::endl;
+	}
+	
 }
 

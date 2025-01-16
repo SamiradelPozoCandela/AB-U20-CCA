@@ -50,7 +50,7 @@ public:
 
     void agregarPaciente(const std::string& fichPacientes);
     void editarPaciente(const std::string& fichPacientes,std::vector<Pacientes>& listaPacientes);
-    void buscarPaciente(std::vector<Pacientes>& listaPacientes);
+    void buscarPaciente(const std::string& fichPacientes,std::vector<Pacientes>& listaPacientes);
 };
 
 #endif
