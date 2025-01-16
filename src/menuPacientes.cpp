@@ -41,7 +41,7 @@ void submenuPacientes(const std::string& fichPacientes, std::vector<Pacientes>& 
 			salir();
 			break;
 		case 3:
-			pacientes.buscarPaciente(fichPacientes,listaPacientes);
+			pacientes.buscarPaciente(fichPacientes);
 			salir();
 			break;
 		case 0:

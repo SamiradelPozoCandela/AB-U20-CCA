@@ -12,23 +12,22 @@ void Pacientes::agregarPaciente(const std::string& fichPacientes) {
 
 	// Textos en UTF-8
 	codificacionArchivos();
-
 	limpiarPantalla();
+
+	// Formulario nuevo paciente
 	std::cout << "Introduce los datos del nuevo paciente\n\n";
 
 	std::cout << "DNI: ";
-	// Para evitar que DNI y Nombre se impriman a la vez, se limpia la entrada de datos
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Para evitar que DNI y Nombre se impriman a la vez, se limpia la entrada de datos
 	std::getline(std::cin, dni);
 	
-
 	std::cout << "Nombre: ";
 	std::getline(std::cin,nombre);
 
 	std::cout << "Apellidos: ";
 	std::getline(std::cin,apellidos);
 
-	do {
+	do { // Bucle para controlar que introduce 9 digitos
 		std::cout << "Teléfono: ";
 		std::getline(std::cin, inputTelefono); 
 		if (esNumero(inputTelefono, 9)) {
@@ -43,7 +42,7 @@ void Pacientes::agregarPaciente(const std::string& fichPacientes) {
 	std::cout << "Dirección: ";
 	std::getline(std::cin,direccion);
 
-	do {
+	do { // Bucle para controlar que introduce 5 digitos
 		std::cout << "CP: ";
 		std::getline(std::cin, inputCp);
 		if (esNumero(inputCp, 5)){
@@ -61,7 +60,7 @@ void Pacientes::agregarPaciente(const std::string& fichPacientes) {
 	std::cout << "Nacionalidad: ";
 	std::getline(std::cin, nacionalidad);
 
-	do {
+	do { // Bucle para controlar que introduce 1 caracter y que solo es A|a o B|b
 		std::cout << "Estado [Alta (A) | Baja (B)]: ";
 		std::getline(std::cin, inputAltaBaja);
 		altaBaja = toupper(inputAltaBaja[0]); // Por si acaso, solo coger el primer caracter para pasarlo a mayúsculas
@@ -70,10 +69,10 @@ void Pacientes::agregarPaciente(const std::string& fichPacientes) {
 		}
 	} while (altaBaja != "A" && altaBaja != "B");
 	
-	do {
+	do { // Bucle para controlar que introduce 1 carácter y que solo es S|s o N|n
 		std::cout << "¿Enfermedad crónica? [S|N]: ";
 		std::getline(std::cin, inputEnfermedadCronica);
-		respuesta = toupper(inputEnfermedadCronica[0]); // Por si acaso, solo coger el primer caracter para pasarlo a mayúsculas
+		respuesta = toupper(inputEnfermedadCronica[0]); // Por si acaso, solo coger el primer carácter para pasarlo a mayúsculas
 		if (respuesta != 'S') {
 			enfermedadCronica = true;
 			break;
@@ -119,16 +118,16 @@ void Pacientes::agregarPaciente(const std::string& fichPacientes) {
 	}
 }
 
+
 void Pacientes::editarPaciente(const std::string& fichPacientes,std::vector<Pacientes>& listaPacientes) {
 	string dniBuscar,linea,dniPaciente,nuevoDNI,nuevoNombre,nuevoApellido,nuevoTelefono,nuevaDireccion,nuevaCP,nuevaAltaBaja,inputAltaBaja,nuevaLocalidad,nuevaNacionalidad;
 	char respuesta;
 	bool encontrado = false;
+	std::ifstream archivo(fichPacientes);
+	std::vector<Pacientes> pacientesActualizados;
 
 	// Textos en UTF-8
 	codificacionArchivos();
-
-	std::ifstream archivo(fichPacientes);
-	std::vector<Pacientes> pacientesActualizados;
 
 	// Verificar que el archivo se abre correctamente
 	if (!archivo.is_open()) {
@@ -136,9 +135,12 @@ void Pacientes::editarPaciente(const std::string& fichPacientes,std::vector<Paci
 		return;
 	}
 
+	// Solicitar DNI
 	std::cout << "\nIntroduce el DNI del paciente a modificar: ";
 	std::getline(std::cin >> std::ws, dniBuscar);
 
+
+	// Buscar DNI en el csv
 	while (std::getline(archivo, linea)) {
 		std::stringstream ss(linea);
 		std::getline(ss, dniPaciente, ','); // Leer solo el DNI
@@ -151,6 +153,8 @@ void Pacientes::editarPaciente(const std::string& fichPacientes,std::vector<Paci
 
 			// Ver los datos del paciente
 			std::cout << "\nDatos del paciente:\n" << linea << "\n";
+
+			// Formulario modificar paciente. En todos los elementos se controlan los vacíos
 			std::cout << "\nIntroduce nuevos datos (deja vacío para mantener el actual):\n";
 
 			std::cout << "DNI: ";
@@ -165,7 +169,7 @@ void Pacientes::editarPaciente(const std::string& fichPacientes,std::vector<Paci
 			std::getline(std::cin, nuevoApellido);
 			if (!nuevoApellido.empty()) pacienteModificado.apellidos = nuevoApellido;
 
-			do {
+			do { // Bucle para controlar que introduce 9 digitos
 				std::cout << "Teléfono: ";
 				std::getline(std::cin, nuevoTelefono);
 				if (!nuevoTelefono.empty()) {
@@ -181,12 +185,11 @@ void Pacientes::editarPaciente(const std::string& fichPacientes,std::vector<Paci
 				}
 			} while (true);
 			
-
 			std::cout << "Dirección: ";
 			std::getline(std::cin, nuevaDireccion);
 			if (!nuevaDireccion.empty()) pacienteModificado.direccion = nuevaDireccion;
 
-			do {
+			do { // Bucle para controlar que introduce 5 digitos
 				std::cout << "CP: ";
 				std::getline(std::cin, nuevaCP);
 				if (!nuevaCP.empty()) {
@@ -211,7 +214,7 @@ void Pacientes::editarPaciente(const std::string& fichPacientes,std::vector<Paci
 			std::getline(std::cin, nuevaNacionalidad);
 			if (!nuevaNacionalidad.empty()) pacienteModificado.nacionalidad = nuevaNacionalidad;
 
-			do {
+			do { // Bucle para controlar que introduce 1 caracter y que solo es A|a o B|b
 				std::cout << "Estado [Alta (A) | Baja (B)]: ";
 				std::getline(std::cin, nuevaAltaBaja);
 				if (!inputAltaBaja.empty()) {
@@ -229,7 +232,7 @@ void Pacientes::editarPaciente(const std::string& fichPacientes,std::vector<Paci
 				}
 			} while (inputAltaBaja != "A" && inputAltaBaja != "B");
 
-			do {
+			do { // Bucle para controlar que introduce 1 carácter y que solo es S|s o N|n
 				std::cout << "¿Enfermedad crónica? [S|N]: ";
 				std::string nuevaEnfermedadCronica;
 				std::getline(std::cin, nuevaEnfermedadCronica);
@@ -274,7 +277,8 @@ void Pacientes::editarPaciente(const std::string& fichPacientes,std::vector<Paci
 	archivoSalida.close();
 }
 
-void Pacientes::buscarPaciente(const std::string& fichPacientes, std::vector<Pacientes>& listaPacientes) {
+
+void Pacientes::buscarPaciente(const std::string& fichPacientes) {
 	string dniBuscar, linea, dniPaciente;
 	bool encontrado = false;
 
@@ -315,7 +319,30 @@ void Pacientes::buscarPaciente(const std::string& fichPacientes, std::vector<Pac
 
 	if (!encontrado) {
 		std::cout << "\nPaciente no encontrado." << std::endl;
-	}
-	
+	}	
 }
 
+// Funciones comunes Pacientes
+
+std::string Pacientes::buscarDNI(const std::string& fichPacientes, const std::string& dniBuscar) {
+	std::ifstream archivo(fichPacientes);
+	std::string linea, dniPaciente;
+
+	if (!archivo.is_open()) {
+		std::cerr << "Error al abrir el archivo: " << fichPacientes << std::endl;
+		return ""; // Devuelve una línea vacía en caso de error
+	}
+
+	while (std::getline(archivo, linea)) {
+		std::stringstream ss(linea);
+		std::getline(ss, dniPaciente, ','); // Leer solo el DNI
+
+		if (dniPaciente == dniBuscar) {
+			archivo.close();
+			return linea; // Devuelve la línea del paciente encontrado
+		}
+	}
+
+	archivo.close();
+	return ""; // Devuelve una línea vacía si no se encuentra el paciente
+}
