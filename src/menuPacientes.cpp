@@ -47,7 +47,9 @@ void submenuPacientes(const std::string& fichPacientes, std::vector<Pacientes>& 
 		case 0:
 			return;
 		default:
+			std::cout << "\n";
 			std::cout << "Opción inválida, introduzca un número del 0 al 3.\n";
+			pausa();
 		}
 	}
 
