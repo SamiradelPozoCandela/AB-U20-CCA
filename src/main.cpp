@@ -16,11 +16,19 @@ int main() {
 	// Textos en UTF-8
 	codificacionArchivos();
 
-	// Declarar la ruta donde se almacenarán los datos de los Pacientes
+	// Declarar la ruta donde se almacenarán los datos csv
 	std::string fichPacientes = "../../../csv/Pacientes.csv";
+	std::string fichMedicos = "../../../csv/Medicos.csv";
+	std::string fichCitas = "../../../csv/Citas.csv";
+	std::string fichReportes = "../../../csv/Reportes.csv";
+	std::string fichBackup = "../../../csv/Backup.csv";
 
-	// Declarar el vector donde se almacenaran las filas de usuarios
+	// Declarar el vector donde se almacenaran las filas de los datos de los csv
 	std::vector<Pacientes> listaPacientes;
+	std::vector<Medicos> listaMedicos;
+	//std::vector<Citas> listaCitas;
+	//std::vector<Reportes> listaReportes;
+	//std::vector<Backup> listaBackup;
 
 	int opcion = -1;
 	while (opcion != 0) {
@@ -46,16 +54,16 @@ int main() {
 				submenuPacientes(fichPacientes,listaPacientes); 
 				break;
 			case 2: 
-				submenuMedicos();
+				submenuMedicos(fichMedicos,listaMedicos);
 				break;
 			case 3: 
-				submenuCitas();
+				/*submenuCitas(fichCitas,listaCitas);*/
 				break;
 			case 4: 
-				submenuReportes();
+				/*submenuReportes(fichReportes,listaReportes);*/
 				break;
 			case 5: 
-				submenuBackup();
+				/*submenuBackup(fichBackup,listaBackup);*/
 				break;
 			case 0: 
 				salir();

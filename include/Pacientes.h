@@ -15,7 +15,6 @@ private:
     string cp;
     string localidad;
     string nacionalidad;
-    string estado;
     string altaBaja;
     bool enfermedadCronica;
 

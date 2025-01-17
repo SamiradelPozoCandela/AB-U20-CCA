@@ -1,11 +1,18 @@
 #include <iostream>
-#include <locale.h> //admita caracteres especiales y tildes
+#include <vector>
+#include <cctype>
+#include <sstream>
+#include <fstream>
 #include "../include/menuMedico.h"
+#include "../include/Medicos.h"
 #include "../include/funciones_comunes.h"
 
-void submenuMedicos() {
+
+void submenuMedicos(const std::string& fichMedicos, std::vector<Medicos>& listaMedicos) {
 	// Textos en UTF-8
 	codificacionArchivos();
+
+	Medicos medico;
 
 	int opcion;
 	while (true) {
@@ -25,6 +32,8 @@ void submenuMedicos() {
 
 		switch (opcion) {
 		case 1:
+			medico.agregarMedico(fichMedicos);
+			salir();
 			break;
 		case 2:
 			break;

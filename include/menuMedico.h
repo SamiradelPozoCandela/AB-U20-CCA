@@ -1,7 +1,9 @@
 #ifndef MENU_MEDICO_H
 #define MENU_MEDICO_H
 
-void submenuMedicos();
+#include "../include/Medicos.h" 
+
+void submenuMedicos(const std::string& fichMedicos, std::vector<Medicos>& listaMedicos);
 
 #endif
 
