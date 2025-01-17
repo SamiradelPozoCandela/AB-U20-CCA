@@ -19,7 +19,8 @@ void Pacientes::agregarPaciente(const std::string& fichPacientes) {
 	std::cout << "¿Desea conservar los cambios? [S|N]: ";
 	std::cin >> siNo;
 	siNo = toupper(siNo);
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpiar buffer nuevamente
+	// Limpiar buffer nuevamente
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
 
 	if (siNo == 'S') {
 		// Abrir fichero Pacientes.csv
@@ -41,7 +42,6 @@ void Pacientes::agregarPaciente(const std::string& fichPacientes) {
 
 void Pacientes::editarPaciente(const std::string& fichPacientes,std::vector<Pacientes>& listaPacientes) {
 	string dniBuscar,linea,dniPaciente,nuevoDNI,nuevoNombre,nuevoApellido,nuevoTelefono,nuevaDireccion,nuevaCP,nuevaAltaBaja,inputAltaBaja,nuevaLocalidad,nuevaNacionalidad;
-	char respuesta;
 	bool encontrado = false;
 	std::vector<Pacientes> pacientesActualizados;
 
@@ -66,11 +66,13 @@ void Pacientes::editarPaciente(const std::string& fichPacientes,std::vector<Paci
 	// Buscar DNI en el csv
 	while (std::getline(archivo, linea)) {
 		std::stringstream ss(linea);
-		std::getline(ss, dniPaciente, ','); // Leer solo el DNI
+		// Leer solo el DNI
+		std::getline(ss, dniPaciente, ','); 
 
 		if (dniPaciente == dniBuscar) {
 			encontrado = true;
-			Pacientes pacienteModificado = Pacientes::fromCSV(linea); // Cargar el paciente actual
+			// Cargar el paciente actual
+			Pacientes pacienteModificado = Pacientes::fromCSV(linea); 
 
 			// Ver los datos del paciente
 			std::cout << "\nDatos del paciente:\n" << linea << "\n";
@@ -84,9 +86,9 @@ void Pacientes::editarPaciente(const std::string& fichPacientes,std::vector<Paci
 			if (!nuevosDatos.dni.empty()) pacienteModificado.dni = nuevosDatos.dni;
 			if (!nuevosDatos.nombre.empty()) pacienteModificado.nombre = nuevosDatos.nombre;
 			if (!nuevosDatos.apellidos.empty()) pacienteModificado.apellidos = nuevosDatos.apellidos;
-			if (nuevosDatos.telefono.empty()) pacienteModificado.telefono = nuevosDatos.telefono;
+			if (!nuevosDatos.telefono.empty()) pacienteModificado.telefono = nuevosDatos.telefono;
 			if (!nuevosDatos.direccion.empty()) pacienteModificado.direccion = nuevosDatos.direccion;
-			if (nuevosDatos.cp.empty()) pacienteModificado.cp = nuevosDatos.cp;
+			if (!nuevosDatos.cp.empty()) pacienteModificado.cp = nuevosDatos.cp;
 			if (!nuevosDatos.localidad.empty()) pacienteModificado.localidad = nuevosDatos.localidad;
 			if (!nuevosDatos.nacionalidad.empty()) pacienteModificado.nacionalidad = nuevosDatos.nacionalidad;
 			if (!nuevosDatos.altaBaja.empty()) pacienteModificado.altaBaja = nuevosDatos.altaBaja;
@@ -122,6 +124,7 @@ void Pacientes::buscarPaciente(const std::string& fichPacientes) {
 
 	// Textos en UTF-8
 	codificacionArchivos();
+	limpiarPantalla();
 
 	// Abrir archivo
 	std::ifstream archivo(fichPacientes);
@@ -139,7 +142,8 @@ void Pacientes::buscarPaciente(const std::string& fichPacientes) {
 	// Bucle que recorre linea por linea del archivo
 	while (std::getline(archivo, linea)) {
 		std::stringstream ss(linea);
-		std::getline(ss, dniPaciente, ','); // Leer solo el DNI
+		// Leer solo el DNI
+		std::getline(ss, dniPaciente, ','); 
 
 		if (dniPaciente == dniBuscar) {
 			encontrado = true;
@@ -156,34 +160,40 @@ void Pacientes::buscarPaciente(const std::string& fichPacientes) {
 	archivo.close(); 
 
 	if (!encontrado) {
-		std::cout << "\nPaciente no encontrado." << std::endl;
+		std::cout << "\nPaciente no encontrado.";
+		return;
 	}	
 }
 
 // Funciones comunes Pacientes
 
+// En pruebas
 std::string Pacientes::buscarDNI(const std::string& fichPacientes, const std::string& dniBuscar) {
 	std::ifstream archivo(fichPacientes);
 	std::string linea, dniPaciente;
 
 	if (!archivo.is_open()) {
 		std::cerr << "Error al abrir el archivo: " << fichPacientes << std::endl;
-		return ""; // Devuelve una línea vacía en caso de error
+		// Devolver una línea vacía en caso de error
+		return ""; 
 	}
 
 	while (std::getline(archivo, linea)) {
 		std::stringstream ss(linea);
-		std::getline(ss, dniPaciente, ','); // Leer solo el DNI
+		// Leer solo el DNI
+		std::getline(ss, dniPaciente, ','); 
 
 		if (dniPaciente == dniBuscar) {
+			// Cerrar archivo
 			archivo.close();
-			return linea; // Devuelve la línea del paciente encontrado
+			// Devolver la línea del paciente encontrado
+			return linea; 
 		}
 	}
 
 	archivo.close();
 	return ""; // Devuelve una línea vacía si no se encuentra el paciente
-}
+} // En proceso
 
 Pacientes Pacientes::formularioDatosPaciente(bool editarCampos) {
 	Pacientes paciente;
