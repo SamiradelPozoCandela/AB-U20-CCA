@@ -42,7 +42,8 @@ int main() {
 
 		switch (opcion) {
 			case 1: 
-				submenuPacientes(fichPacientes,listaPacientes); // Necesario compartir el fichero para que pueda ser usado en el resto de .cpp
+				// Necesario compartir el fichero para que pueda ser usado en el resto de .cpp y el vector creado
+				submenuPacientes(fichPacientes,listaPacientes); 
 				break;
 			case 2: 
 				submenuMedicos();

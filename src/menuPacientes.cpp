@@ -1,5 +1,4 @@
 #include <iostream>
-#include <locale.h> //admita caracteres especiales y tildes
 #include <vector>
 #include <cctype>
 #include <sstream>
