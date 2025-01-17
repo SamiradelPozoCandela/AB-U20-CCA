@@ -6,9 +6,7 @@
 #include "../include/funciones_comunes.h"
 
 void Pacientes::agregarPaciente(const std::string& fichPacientes) {
-	
-	string inputTelefono,inputCp,inputAltaBaja,inputEnfermedadCronica;
-	char siNo, respuesta;
+	char siNo;
 
 	// Textos en UTF-8
 	codificacionArchivos();
@@ -16,76 +14,7 @@ void Pacientes::agregarPaciente(const std::string& fichPacientes) {
 
 	// Formulario nuevo paciente
 	std::cout << "Introduce los datos del nuevo paciente\n\n";
-
-	std::cout << "DNI: ";
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Para evitar que DNI y Nombre se impriman a la vez, se limpia la entrada de datos
-	std::getline(std::cin, dni);
-	
-	std::cout << "Nombre: ";
-	std::getline(std::cin,nombre);
-
-	std::cout << "Apellidos: ";
-	std::getline(std::cin,apellidos);
-
-	do { // Bucle para controlar que introduce 9 digitos
-		std::cout << "Teléfono: ";
-		std::getline(std::cin, inputTelefono); 
-		if (esNumero(inputTelefono, 9)) {
-			telefono = string2int(inputTelefono); // Convertir la string a int
-			break;
-		}
-		else {
-			std::cout << "\nError: número de teléfono inválido. Debe tener 9 dígitos y solo contener números.\n";
-		} 
-	}while(true);
-
-	std::cout << "Dirección: ";
-	std::getline(std::cin,direccion);
-
-	do { // Bucle para controlar que introduce 5 digitos
-		std::cout << "CP: ";
-		std::getline(std::cin, inputCp);
-		if (esNumero(inputCp, 5)){
-			cp = string2int(inputCp); // Convertir la string a int
-			break;
-		}
-		else {
-			std::cout << "\nError: número de código postal inválido. Debe tener 5 dígitos y solo contener números.\n";
-		}
-	} while (true);
-
-	std::cout << "Localidad: ";
-	std::getline(std::cin, localidad);
-
-	std::cout << "Nacionalidad: ";
-	std::getline(std::cin, nacionalidad);
-
-	do { // Bucle para controlar que introduce 1 caracter y que solo es A|a o B|b
-		std::cout << "Estado [Alta (A) | Baja (B)]: ";
-		std::getline(std::cin, inputAltaBaja);
-		altaBaja = toupper(inputAltaBaja[0]); // Por si acaso, solo coger el primer caracter para pasarlo a mayúsculas
-		if (altaBaja != "A" && altaBaja != "B") {
-			std::cout << "Por favor, introduce 'A' para Alta o 'B' para Baja.\n";
-		}
-	} while (altaBaja != "A" && altaBaja != "B");
-	
-	do { // Bucle para controlar que introduce 1 carácter y que solo es S|s o N|n
-		std::cout << "¿Enfermedad crónica? [S|N]: ";
-		std::getline(std::cin, inputEnfermedadCronica);
-		respuesta = toupper(inputEnfermedadCronica[0]); // Por si acaso, solo coger el primer carácter para pasarlo a mayúsculas
-		if (respuesta != 'S') {
-			enfermedadCronica = true;
-			break;
-		}
-		else if(respuesta != 'N') {
-			enfermedadCronica = false;
-			break;
-		}
-		else{
-			std::cout << "Por favor, introduce 'S' para Sí o 'N' para No.\n";
-		}
-	} while (true);
-	
+	Pacientes nuevoPaciente = formularioDatosPaciente(false);
 
 	std::cout << "¿Desea conservar los cambios? [S|N]: ";
 	std::cin >> siNo;
@@ -96,16 +25,7 @@ void Pacientes::agregarPaciente(const std::string& fichPacientes) {
 		// Abrir fichero Pacientes.csv
 		std::ofstream archivo(fichPacientes, std::ios::app);
 		if (archivo.is_open()) {
-			archivo << dni << "," 
-					<< nombre << "," 
-					<< apellidos << "," 
-					<< telefono << ","
-					<< direccion << "," 
-					<< cp << "," 
-					<< localidad << "," 
-					<< nacionalidad << ","
-					<< (altaBaja == "A" ? "Alta" : "Baja") << ","
-					<< (enfermedadCronica == 1 ? "true" : "false") << "\n";
+			archivo << nuevoPaciente.toCSV() << "\n";
 			archivo.close();
 			std::cout << "\nEl paciente se ha registrado correctamente.\n";
 		}
@@ -123,11 +43,14 @@ void Pacientes::editarPaciente(const std::string& fichPacientes,std::vector<Paci
 	string dniBuscar,linea,dniPaciente,nuevoDNI,nuevoNombre,nuevoApellido,nuevoTelefono,nuevaDireccion,nuevaCP,nuevaAltaBaja,inputAltaBaja,nuevaLocalidad,nuevaNacionalidad;
 	char respuesta;
 	bool encontrado = false;
-	std::ifstream archivo(fichPacientes);
 	std::vector<Pacientes> pacientesActualizados;
 
-	// Textos en UTF-8
+	// Textos en UTF - 8
 	codificacionArchivos();
+	limpiarPantalla();
+
+	// Abrir archivo
+	std::ifstream archivo(fichPacientes);
 
 	// Verificar que el archivo se abre correctamente
 	if (!archivo.is_open()) {
@@ -149,110 +72,25 @@ void Pacientes::editarPaciente(const std::string& fichPacientes,std::vector<Paci
 			encontrado = true;
 			Pacientes pacienteModificado = Pacientes::fromCSV(linea); // Cargar el paciente actual
 
-			std::cout << pacienteModificado.telefono;
-
 			// Ver los datos del paciente
 			std::cout << "\nDatos del paciente:\n" << linea << "\n";
 
 			// Formulario modificar paciente. En todos los elementos se controlan los vacíos
 			std::cout << "\nIntroduce nuevos datos (deja vacío para mantener el actual):\n";
 
-			std::cout << "DNI: ";
-			std::getline(std::cin, nuevoDNI);
-			if (!nuevoDNI.empty()) pacienteModificado.dni = nuevoDNI;
+			Pacientes nuevosDatos = Pacientes::formularioDatosPaciente(true);
 
-			std::cout << "Nombre: ";
-			std::getline(std::cin, nuevoNombre);
-			if (!nuevoNombre.empty()) pacienteModificado.nombre = nuevoNombre;
-
-			std::cout << "Apellidos: ";
-			std::getline(std::cin, nuevoApellido);
-			if (!nuevoApellido.empty()) pacienteModificado.apellidos = nuevoApellido;
-
-			do { // Bucle para controlar que introduce 9 digitos
-				std::cout << "Teléfono: ";
-				std::getline(std::cin, nuevoTelefono);
-				if (!nuevoTelefono.empty()) {
-					if (esNumero(nuevoTelefono, 9)) {
-						pacienteModificado.telefono = string2int(nuevoTelefono);
-						break;
-					}
-					else {
-						std::cout << "\nError: número de teléfono inválido. Debe tener 9 dígitos y solo contener números.\n";
-					}
-				}else{
-					break;
-				}
-			} while (true);
-			
-			std::cout << "Dirección: ";
-			std::getline(std::cin, nuevaDireccion);
-			if (!nuevaDireccion.empty()) pacienteModificado.direccion = nuevaDireccion;
-
-			do { // Bucle para controlar que introduce 5 digitos
-				std::cout << "CP: ";
-				std::getline(std::cin, nuevaCP);
-				if (!nuevaCP.empty()) {
-					if (esNumero(nuevaCP, 5)) {
-						pacienteModificado.cp = string2int(nuevaCP);
-						break;
-					}
-					else {
-						std::cout << "\nError: número de código postal inválido. Debe tener 5 dígitos y solo contener números.\n";
-					}
-				}
-				else {
-					break;
-				}
-			} while (true);
-
-			std::cout << "Localidad: ";
-			std::getline(std::cin, nuevaLocalidad);
-			if (!nuevaLocalidad.empty()) localidad = nuevaLocalidad;
-
-			std::cout << "Nacionalidad: ";
-			std::getline(std::cin, nuevaNacionalidad);
-			if (!nuevaNacionalidad.empty()) pacienteModificado.nacionalidad = nuevaNacionalidad;
-
-			do { // Bucle para controlar que introduce 1 caracter y que solo es A|a o B|b
-				std::cout << "Estado [Alta (A) | Baja (B)]: ";
-				std::getline(std::cin, nuevaAltaBaja);
-				if (!inputAltaBaja.empty()) {
-					inputAltaBaja = toupper(nuevaAltaBaja[0]); // Por si acaso, solo coger el primer caracter para pasarlo a mayúsculas
-					if (inputAltaBaja != "A" && inputAltaBaja != "B") {
-						std::cout << "Por favor, introduce 'A' para Alta o 'B' para Baja.\n";
-					}
-					else {
-						pacienteModificado.altaBaja = inputAltaBaja;
-						break;
-					}
-				}
-				else {
-					break;
-				}
-			} while (inputAltaBaja != "A" && inputAltaBaja != "B");
-
-			do { // Bucle para controlar que introduce 1 carácter y que solo es S|s o N|n
-				std::cout << "¿Enfermedad crónica? [S|N]: ";
-				std::string nuevaEnfermedadCronica;
-				std::getline(std::cin, nuevaEnfermedadCronica);
-				if (!nuevaEnfermedadCronica.empty()) {
-					respuesta = toupper(nuevaEnfermedadCronica[0]); // Por si acaso, solo coger el primer caracter para pasarlo a mayúsculas
-					if (respuesta != 'S') {
-						pacienteModificado.enfermedadCronica = true;
-						break;
-					}
-					else if (respuesta != 'N') {
-						break;
-					}
-					else {
-						std::cout << "Por favor, introduce 'S' para Sí o 'N' para No.\n";
-					}
-				}
-				else {
-					break;
-				}
-			} while (true);
+			// Actualizar los campos del paciente con los nuevos datos solo si no están vacíos
+			if (!nuevosDatos.dni.empty()) pacienteModificado.dni = nuevosDatos.dni;
+			if (!nuevosDatos.nombre.empty()) pacienteModificado.nombre = nuevosDatos.nombre;
+			if (!nuevosDatos.apellidos.empty()) pacienteModificado.apellidos = nuevosDatos.apellidos;
+			if (nuevosDatos.telefono.empty()) pacienteModificado.telefono = nuevosDatos.telefono;
+			if (!nuevosDatos.direccion.empty()) pacienteModificado.direccion = nuevosDatos.direccion;
+			if (nuevosDatos.cp.empty()) pacienteModificado.cp = nuevosDatos.cp;
+			if (!nuevosDatos.localidad.empty()) pacienteModificado.localidad = nuevosDatos.localidad;
+			if (!nuevosDatos.nacionalidad.empty()) pacienteModificado.nacionalidad = nuevosDatos.nacionalidad;
+			if (!nuevosDatos.altaBaja.empty()) pacienteModificado.altaBaja = nuevosDatos.altaBaja;
+			pacienteModificado.enfermedadCronica = nuevosDatos.enfermedadCronica;
 
 			std::cout << "\nModificación guardada para el paciente con DNI: " << dniPaciente << std::endl;
 			pacientesActualizados.push_back(pacienteModificado); // Agregar paciente modificado
@@ -345,4 +183,118 @@ std::string Pacientes::buscarDNI(const std::string& fichPacientes, const std::st
 
 	archivo.close();
 	return ""; // Devuelve una línea vacía si no se encuentra el paciente
+}
+
+Pacientes Pacientes::formularioDatosPaciente(bool editarCampos) {
+	Pacientes paciente;
+	string input;
+
+	// DNI
+	std::cout << "DNI: ";
+	// Para evitar que DNI y Nombre se impriman a la vez, se limpia la entrada de datos
+	if (!editarCampos) std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	std::getline(std::cin, input);
+	if (!editarCampos || (editarCampos && !input.empty())) {
+		paciente.dni = input;
+	}
+
+	// Nombre
+	std::cout << "Nombre: ";
+	std::getline(std::cin, input);
+	if (!editarCampos || (editarCampos && !input.empty())) {
+		paciente.nombre = input;
+	}
+
+	// Apellidos
+	std::cout << "Apellidos: ";
+	std::getline(std::cin, input);
+	if (!editarCampos || (editarCampos && !input.empty())) {
+		paciente.apellidos = input;
+	}
+
+	// Teléfono
+	do {
+		std::cout << "Teléfono (9 dígitos): ";
+		std::getline(std::cin, input);
+		if (input.empty() && editarCampos) break;
+		if (!editarCampos || (editarCampos && !input.empty())) {
+			if (esNumero(input, 9)) {
+				paciente.telefono = input;
+				break;
+			}
+		}
+		std::cout << "Error: número de teléfono inválido. Debe tener 9 dígitos.\n";
+	} while (true);
+
+	// Dirección
+	std::cout << "Dirección: ";
+	std::getline(std::cin, input);
+	if (!editarCampos || (editarCampos && !input.empty())) {
+		paciente.direccion = input;
+	}
+
+	// Código Postal
+	do {
+		std::cout << "CP (5 dígitos): ";
+		std::getline(std::cin, input);
+		if (input.empty() && editarCampos) break;
+		if (!editarCampos || (editarCampos && !input.empty())) {
+			if (esNumero(input, 5)) {
+				paciente.cp = input;
+				break;
+			}
+		}
+		std::cout << "Error: CP inválido. Debe tener 5 dígitos.\n";
+	} while (true);
+
+	// Localidad
+	std::cout << "Localidad: ";
+	std::getline(std::cin, input);
+	if (!editarCampos || (editarCampos && !input.empty())) {
+		paciente.localidad = input;
+	}
+
+	// Nacionalidad
+	std::cout << "Nacionalidad: ";
+	std::getline(std::cin, input);
+	if (!editarCampos || (editarCampos && !input.empty())) {
+		paciente.nacionalidad = input;
+	}
+
+	// Alta/Baja
+	do {
+		std::cout << "Estado [Alta (A) | Baja (B)]: ";
+		std::getline(std::cin, input);
+		if (input.empty() && editarCampos) break;
+		if (!editarCampos || (editarCampos && !input.empty())) {
+			input = toupper(input[0]);
+			if (input == "A" || input == "B") {
+				paciente.altaBaja = input;
+				break;
+			}
+		}
+		std::cout << "Por favor, introduce 'A' para Alta o 'B' para Baja.\n";
+	} while (true);
+
+	// Enfermedad Crónica
+	do {
+		std::cout << "¿Enfermedad crónica? [S|N]: ";
+		std::getline(std::cin, input);
+		if (input.empty() && editarCampos) break;
+		if (!editarCampos || (editarCampos && !input.empty())) {
+			char respuesta = toupper(input[0]);
+			if (respuesta == 'S') {
+				paciente.enfermedadCronica = true;
+				break;
+			}
+			else if (respuesta == 'N') {
+				paciente.enfermedadCronica = false;
+				break;
+			}
+		}
+		std::cout << "Por favor, introduce 'S' para Sí o 'N' para No.\n";
+	} while (true);
+
+
+	return paciente;
 }

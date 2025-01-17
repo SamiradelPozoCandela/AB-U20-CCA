@@ -10,9 +10,9 @@ private:
     string dni;
     string nombre;
     string apellidos;
-    int telefono;
+    string telefono;
     string direccion;
-    int cp;
+    string cp;
     string localidad;
     string nacionalidad;
     string estado;
@@ -28,14 +28,12 @@ public:
         std::getline(ss, p.dni, ',');
         std::getline(ss, p.nombre, ',');
         std::getline(ss, p.apellidos, ',');
-        std::getline(ss, token, ',');
-        p.telefono = std::stoi(token);
+        std::getline(ss, p.telefono, ',');
         std::getline(ss, p.direccion, ',');
-        std::getline(ss, token, ',');
-        p.cp = std::stoi(token);
+        std::getline(ss, p.cp, ',');
         std::getline(ss, p.localidad, ',');
         std::getline(ss, p.nacionalidad, ',');
-        std::getline(ss, p.estado, ',');
+        std::getline(ss, p.altaBaja, ',');
         std::getline(ss, token);
         p.enfermedadCronica = (token == "true");
 
@@ -43,15 +41,17 @@ public:
     }
 
     std::string toCSV() const {
-        return dni + "," + nombre + "," + apellidos + "," + std::to_string(telefono) + "," +
-            direccion + "," + std::to_string(cp) + "," + localidad + "," + nacionalidad + "," +
-            estado + "," + (enfermedadCronica ? "true" : "false");
+        return dni + "," + nombre + "," + apellidos + "," + telefono + "," +
+            direccion + "," + cp + "," + localidad + "," + nacionalidad + "," +
+            altaBaja + "," + (enfermedadCronica ? "true" : "false");
     }
 
     void agregarPaciente(const std::string& fichPacientes);
     void editarPaciente(const std::string& fichPacientes,std::vector<Pacientes>& listaPacientes);
     void buscarPaciente(const std::string& fichPacientes);
-    std::string buscarDNI(const std::string& fichPacientes, const std::string& dniBuscar)
+    static Pacientes formularioDatosPaciente(bool editarCampos);
+    std::string buscarDNI(const std::string& fichPacientes, const std::string& dniBuscar);
+    
 };
 
 #endif
