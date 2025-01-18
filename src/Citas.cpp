@@ -7,7 +7,41 @@
 #include "../include/Citas.h"
 #include "../include/funciones_comunes.h"
 
-void Citas::nuevaCita(const std::string& fichCitas) {}
+void Citas::nuevaCita(const std::string& fichCitas) {
+	char siNo;
+
+	// Textos en UTF-8
+	codificacionArchivos();
+	limpiarPantalla();
+
+	// Formulario nueva cita
+	std::cout << "Introduce los datos de la nueva cita:\n\n";
+	Citas nuevaCita = formularioDatosCita(false);
+
+	std::cout << "\n¿Desea conservar los cambios? [S|N]: ";
+	std::cin >> siNo;
+	siNo = toupper(siNo);
+	// Limpiar buffer nuevamente
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+	if (siNo == 'S') {
+		// Abrir fichero Citas.csv
+		std::ofstream archivo(fichCitas, std::ios::app);
+		if (archivo.is_open()) {
+			archivo << nuevaCita.toCSV() << "\n";
+			archivo.close();
+			std::cout << "\nEl médico se ha registrado correctamente.\n";
+		}
+		else {
+			std::cerr << "Error: No se ha podido registrar la cita.\n";
+		}
+	}
+	else {
+		std::cout << "Los cambios no se han guardado.\n";
+	}
+}
+
+
 void Citas::editarCita(const std::string& fichCitas, std::vector<Citas>& listaCitas) {}
 void Citas::cancelarCita(const std::string& fichCitas, std::vector<Citas>& listaCitas) {}
 void Citas::listarCitas(const std::string& fichCitas) {}
