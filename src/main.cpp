@@ -26,7 +26,7 @@ int main() {
 	// Declarar el vector donde se almacenaran las filas de los datos de los csv
 	std::vector<Pacientes> listaPacientes;
 	std::vector<Medicos> listaMedicos;
-	//std::vector<Citas> listaCitas;
+	std::vector<Citas> listaCitas;
 	//std::vector<Reportes> listaReportes;
 	//std::vector<Backup> listaBackup;
 
@@ -57,7 +57,7 @@ int main() {
 				submenuMedicos(fichMedicos,listaMedicos);
 				break;
 			case 3: 
-				/*submenuCitas(fichCitas,listaCitas);*/
+				submenuCitas(fichCitas,listaCitas);
 				break;
 			case 4: 
 				/*submenuReportes(fichReportes,listaReportes);*/

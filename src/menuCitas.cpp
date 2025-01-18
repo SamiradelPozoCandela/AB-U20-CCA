@@ -1,9 +1,13 @@
 #include <iostream>
-#include <locale.h> //admita caracteres especiales y tildes
+#include <vector>
+#include <cctype>
+#include <sstream>
+#include <fstream>
 #include "../include/menuCitas.h"
+#include "../include/Citas.h"
 #include "../include/funciones_comunes.h"
 
-void submenuCitas() {
+void submenuCitas(const std::string& fichCitas, std::vector<Citas>& listaCitas) {
 	// Textos en UTF-8
 	codificacionArchivos();
 
@@ -12,7 +16,7 @@ void submenuCitas() {
 		limpiarPantalla();
 		std::cout << "\n";
 		std::cout << "***********************************************\n";
-		std::cout << "             GESTIÓN DE CITAS\n";
+		std::cout << "             GESTIÓN DE CITAS MÉDICAS\n";
 		std::cout << "***********************************************\n";
 		std::cout << "\n";
 		std::cout << "1. Nueva cita\n";
@@ -26,12 +30,16 @@ void submenuCitas() {
 
 		switch (opcion) {
 		case 1:
+			nuevaCita(const std::string & fichCitas);
 			break;
 		case 2:
+			editarCita(const std::string & fichCitas, std::vector<Citas>&listaCitas);
 			break;
 		case 3:
+			cancelarCita(const std::string & fichCitas, std::vector<Citas>&listaCitas);
 			break;
 		case 4:
+			listarCitas(const std::string & fichCitas);
 			break;
 		case 0:
 			return;
