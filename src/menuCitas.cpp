@@ -22,9 +22,8 @@ void submenuCitas(const std::string& fichCitas, std::vector<Citas>& listaCitas) 
 		std::cout << "***********************************************\n";
 		std::cout << "\n";
 		std::cout << "1. Nueva cita\n";
-		std::cout << "2. Modificar cita\n";
-		std::cout << "3. Cancelar cita\n";
-		std::cout << "4. Listar citas\n";
+		std::cout << "2. Modificar o cancelar cita\n";
+		std::cout << "3. Listar citas por urgencia o fecha\n";
 		std::cout << "0. Volver\n";
 		std::cout << "\n";
 		std::cout << "Seleccione una opción válida [0-4]: ";
@@ -36,14 +35,10 @@ void submenuCitas(const std::string& fichCitas, std::vector<Citas>& listaCitas) 
 			salir();
 			break;
 		case 2:
-			citas.editarCita(fichCitas,listaCitas);
+			citas.editarCancelarCita(fichCitas,listaCitas);
 			salir();
 			break;
 		case 3:
-			citas.cancelarCita(fichCitas, listaCitas);
-			salir();
-			break;
-		case 4:
 			citas.listarCitas(fichCitas);
 			salir();
 			break;

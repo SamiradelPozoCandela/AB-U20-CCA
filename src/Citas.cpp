@@ -30,7 +30,7 @@ void Citas::nuevaCita(const std::string& fichCitas) {
 		if (archivo.is_open()) {
 			archivo << nuevaCita.toCSV() << "\n";
 			archivo.close();
-			std::cout << "\nEl médico se ha registrado correctamente.\n";
+			std::cout << "\nLa cita se ha registrado correctamente.\n";
 		}
 		else {
 			std::cerr << "Error: No se ha podido registrar la cita.\n";
@@ -42,8 +42,7 @@ void Citas::nuevaCita(const std::string& fichCitas) {
 }
 
 
-void Citas::editarCita(const std::string& fichCitas, std::vector<Citas>& listaCitas) {}
-void Citas::cancelarCita(const std::string& fichCitas, std::vector<Citas>& listaCitas) {}
+void Citas::editarCancelarCita(const std::string& fichCitas, std::vector<Citas>& listaCitas) {}
 void Citas::listarCitas(const std::string& fichCitas) {}
 
 Citas Citas::formularioDatosCita(bool editarCampos) {

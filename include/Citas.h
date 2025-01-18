@@ -42,8 +42,7 @@ public:
     }
 
     void nuevaCita(const std::string& fichCitas);
-    void editarCita(const std::string& fichCitas, std::vector<Citas>& listaCitas);
-    void cancelarCita(const std::string& fichCitas, std::vector<Citas>& listaCitas);
+    void editarCancelarCita(const std::string& fichCitas, std::vector<Citas>& listaCitas);
     void listarCitas(const std::string& fichCitas);
     static Citas formularioDatosCita(bool editarCampos);
 };
