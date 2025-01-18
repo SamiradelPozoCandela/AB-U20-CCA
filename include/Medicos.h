@@ -30,11 +30,11 @@ public:
 
     std::string toCSV() const {
         return nombre + "," + apellidos + "," + categoria + "," +
-               especialidad + "," + altaBaja);
+               especialidad + "," + altaBaja;
     }
 
     void agregarMedico(const std::string& fichMedicos);
-
+    static Medicos formularioDatosMedico(bool editarCampos);
 };
 
 #endif

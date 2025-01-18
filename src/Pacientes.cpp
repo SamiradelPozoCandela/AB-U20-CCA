@@ -167,34 +167,6 @@ void Pacientes::buscarPaciente(const std::string& fichPacientes) {
 
 // Funciones comunes Pacientes
 
-// En pruebas
-std::string Pacientes::buscarDNI(const std::string& fichPacientes, const std::string& dniBuscar) {
-	std::ifstream archivo(fichPacientes);
-	std::string linea, dniPaciente;
-
-	if (!archivo.is_open()) {
-		std::cerr << "Error al abrir el archivo: " << fichPacientes << std::endl;
-		// Devolver una línea vacía en caso de error
-		return ""; 
-	}
-
-	while (std::getline(archivo, linea)) {
-		std::stringstream ss(linea);
-		// Leer solo el DNI
-		std::getline(ss, dniPaciente, ','); 
-
-		if (dniPaciente == dniBuscar) {
-			// Cerrar archivo
-			archivo.close();
-			// Devolver la línea del paciente encontrado
-			return linea; 
-		}
-	}
-
-	archivo.close();
-	return ""; // Devuelve una línea vacía si no se encuentra el paciente
-} // En proceso
-
 Pacientes Pacientes::formularioDatosPaciente(bool editarCampos) {
 	Pacientes paciente;
 	string input;
@@ -308,3 +280,31 @@ Pacientes Pacientes::formularioDatosPaciente(bool editarCampos) {
 
 	return paciente;
 }
+
+// En pruebas
+std::string Pacientes::buscarDNI(const std::string& fichPacientes, const std::string& dniBuscar) {
+	std::ifstream archivo(fichPacientes);
+	std::string linea, dniPaciente;
+
+	if (!archivo.is_open()) {
+		std::cerr << "Error al abrir el archivo: " << fichPacientes << std::endl;
+		// Devolver una línea vacía en caso de error
+		return "";
+	}
+
+	while (std::getline(archivo, linea)) {
+		std::stringstream ss(linea);
+		// Leer solo el DNI
+		std::getline(ss, dniPaciente, ',');
+
+		if (dniPaciente == dniBuscar) {
+			// Cerrar archivo
+			archivo.close();
+			// Devolver la línea del paciente encontrado
+			return linea;
+		}
+	}
+
+	archivo.close();
+	return ""; // Devuelve una línea vacía si no se encuentra el paciente
+} // En proceso
