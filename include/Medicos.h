@@ -40,7 +40,9 @@ public:
 
     void agregarMedico(const std::string& fichMedicos);
     void editarMedico(const std::string& fichMedicos, std::vector<Medicos>& listaMedicos);
+    void buscarMedico(const std::string& fichMedicos);
     static Medicos formularioDatosMedico(bool editarCampos);
+    std::string tipoEspecialidad();
 };
 
 #endif

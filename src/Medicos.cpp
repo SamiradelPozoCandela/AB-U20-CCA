@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cctype>
+#include <string>
 #include <vector>
 #include <fstream>
 #include "../include/Medicos.h"
@@ -116,12 +117,82 @@ void Medicos::editarMedico(const std::string& fichMedicos, std::vector<Medicos>&
 }
 
 
+void Medicos::buscarMedico(const std::string & fichMedicos) {
+	string tipoBusqueda, linea, input;
+	bool encontrado = false;
+
+	// Textos en UTF-8
+	codificacionArchivos();
+	limpiarPantalla();
+
+	// Abrir archivo
+	std::ifstream archivo(fichMedicos);
+
+	// Verificar si el archivo CSV está abierto
+	if (!archivo.is_open()) {
+		std::cerr << "Error al abrir el archivo: " << fichMedicos << std::endl;
+		return;
+	}
+
+	// Seleccionar el tipo de búsqueda: Disponibilidad o Especialidad
+	do {
+		std::cout << "\n¿Desea buscar por Disponibilidad [D] o Especialidad [E]?: ";
+		std::getline(std::cin >> std::ws, input);
+		input = toupper(input[0]);
+
+		if (input == "D") {
+			std::cout << "\nIntroduce la disponibilidad (Disponible [D] | No disponible [N]): ";
+			std::getline(std::cin, input);
+			input = toupper(input[0]);
+			if (input == "D") {
+				tipoBusqueda = "Disponible";
+				break;
+			} else if (input == "N") {
+				tipoBusqueda = "No disponible";
+				break;
+			} else {
+				std::cout << "\nPor favor, introduce 'D' para Disponible o 'N' para No disponible.\n";
+			}
+		}
+		else if (input == "E") {
+			// Seleccione el tipo de especialidad
+			tipoBusqueda = tipoEspecialidad();
+			break;
+		}
+		std::cout << "Por favor, introduce 'D' para Disponibilidad o 'E' para Especialidad.\n";
+	} while (true);
+
+	// Bucle que recorre línea por línea del archivo
+	while (std::getline(archivo, linea)) {
+		std::stringstream ss(linea);
+		Medicos medico = Medicos::fromCSV(linea); // Cargar datos del médico desde la línea
+
+		// Filtrar según la disponibilidad o especialidad
+		if ((toupper(input[0]) == 'D' && medico.disponibilidad == tipoBusqueda) ||
+			(toupper(input[0]) == 'E' && medico.especialidad == tipoBusqueda)) {
+			encontrado = true;
+			std::cout << "\n" << medico.toCSV() << "\n"; // Mostrar datos del médico
+		}
+	}
+
+	// Cerrar el archivo
+	archivo.close();
+
+	if (!encontrado) {
+		std::cout << "\nNo se encontraron médicos que coincidan con el criterio de búsqueda.\n";
+	}
+	else {
+		std::cout << "\n";
+		pausa();
+	}
+}
+
 
 // Funciones comunes Médicos
 
 Medicos Medicos::formularioDatosMedico(bool editarCampos) {
 	Medicos medico;
-	string input;
+	std::string input;
 
 	// USER_ID
 	std::cout << "USER_ID (inical del nombre + primer apellido. Ej: Manolo Gafotas = mgafotas): ";
@@ -158,13 +229,10 @@ Medicos Medicos::formularioDatosMedico(bool editarCampos) {
 	}
 
 	// Especialidad
-	std::cout << "Especialidad: ";
-	std::getline(std::cin, input);
-	if (!editarCampos || (editarCampos && !input.empty())) {
-		medico.especialidad = input;
-	}
+	medico.especialidad = medico.tipoEspecialidad();
 
 	// Alta/Baja
+	if (!editarCampos) std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	do {
 		std::cout << "Estado [Alta (A) | Baja (B)]: ";
 		std::getline(std::cin, input);
@@ -180,6 +248,7 @@ Medicos Medicos::formularioDatosMedico(bool editarCampos) {
 	} while (true);
 
 	// Disponibilidad
+	if (!editarCampos) std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	do {
 		std::cout << "¿Disponible? [S|N]: ";
 		std::getline(std::cin, input);
@@ -199,4 +268,58 @@ Medicos Medicos::formularioDatosMedico(bool editarCampos) {
 	} while (true);
 
 	return medico;
+}
+
+
+// Función para devolver una especialidad 
+std::string Medicos::tipoEspecialidad() {
+	// Textos en UTF-8
+	codificacionArchivos();
+
+	Medicos medico;
+
+	int opcion;
+	while (true) {
+		std::cout << "(Obligatorio) Seleccione una especialidad:\n";
+		std::cout << "1. Cardiología\n";
+		std::cout << "2. Pediatría\n";
+		std::cout << "3. Neurología\n";
+		std::cout << "4. Ginecología y Obstetricia\n";
+		std::cout << "5. Dermatología\n";
+		std::cout << "6. Oftalmología\n";
+		std::cout << "7. Otorrinolaringología\n";
+		std::cout << "8. Traumatología y Ortopedia\n";
+		std::cout << "9. Cirugía General\n";
+		std::cout << "10. Oncología\n";
+		std::cout << "11. Psiquiatría\n";
+		std::cout << "12. Urología\n";
+		std::cout << "13. Endocrinología y Nutrición\n";
+		std::cout << "14. Neumología\n";
+		std::cout << "15. Nefrología\n";
+		std::cout << "Seleccione una opción válida [1-15]: ";
+		std::cin >> opcion;
+
+		switch (opcion) {
+		case 1: return "Cardiología";
+		case 2: return "Pediatría";
+		case 3: return "Neurología";
+		case 4: return "Ginecología y Obstetricia";
+		case 5: return "Dermatología";
+		case 6: return "Oftalmología";
+		case 7: return "Otorrinolaringología";
+		case 8: return "Traumatología y Ortopedia";
+		case 9: return "Cirugía General";
+		case 10: return "Oncología";
+		case 11: return "Psiquiatría";
+		case 12: return "Urología";
+		case 13: return "Endocrinología y Nutrición";
+		case 14: return "Neumología";
+		case 15: return "Nefrología";
+		default:
+			std::cout << "\n";
+			std::cout << "Opción inválida, introduzca un número del 1 al 15.\n";
+			pausa();
+		}
+	}
+
 }
