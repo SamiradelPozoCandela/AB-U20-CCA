@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <random>
 #include "../include/Citas.h"
 #include "../include/funciones_comunes.h"
 
@@ -16,17 +17,15 @@ Citas Citas::formularioDatosCita(bool editarCampos) {
 	std::string input;
 
 	// idCita se genera solo (num aleatorio)
+	// Crear el generador y la distribución
+	std::random_device rd;        // Fuente de entropía
+	std::mt19937 generar(rd());       // Motor de generación (Mersenne Twister)
+	std::uniform_int_distribution<> distrib(1, 100); // Rango [1, 100]
 
-	
-	std::getline(std::cin, input);
-	if (!editarCampos || (editarCampos && !input.empty())) {
-		// Convertir cada carácter a minúscula
-		for (char& c : input) {
-			c = std::tolower(c);
-		}
-		cita.user_id = input;
-	}
-
+	// Generar un número
+	int numeroAleatorio = distrib(generar);
+	cita.idCita = numeroAleatorio;
+             
 	// Paciente
 	std::cout << "Paciente: ";
 	if (!editarCampos) std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');

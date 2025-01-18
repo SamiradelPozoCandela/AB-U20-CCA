@@ -11,6 +11,8 @@ void submenuCitas(const std::string& fichCitas, std::vector<Citas>& listaCitas) 
 	// Textos en UTF-8
 	codificacionArchivos();
 
+	Citas citas;
+
 	int opcion;
 	while (true) {
 		limpiarPantalla();
@@ -30,16 +32,20 @@ void submenuCitas(const std::string& fichCitas, std::vector<Citas>& listaCitas) 
 
 		switch (opcion) {
 		case 1:
-			nuevaCita(const std::string & fichCitas);
+			citas.nuevaCita(fichCitas);
+			salir();
 			break;
 		case 2:
-			editarCita(const std::string & fichCitas, std::vector<Citas>&listaCitas);
+			citas.editarCita(fichCitas,listaCitas);
+			salir();
 			break;
 		case 3:
-			cancelarCita(const std::string & fichCitas, std::vector<Citas>&listaCitas);
+			citas.cancelarCita(fichCitas, listaCitas);
+			salir();
 			break;
 		case 4:
-			listarCitas(const std::string & fichCitas);
+			citas.listarCitas(fichCitas);
+			salir();
 			break;
 		case 0:
 			return;
