@@ -24,7 +24,7 @@ void submenuMedicos(const std::string& fichMedicos, std::vector<Medicos>& listaM
 		std::cout << "\n";
 		std::cout << "1. Agregar médico\n";
 		std::cout << "2. Modificar médico\n";
-		std::cout << "3. Listar médicos\n";
+		std::cout << "3. Listar médicos por Disponibilidad [D] o Especialidad [E]\n";
 		std::cout << "0. Volver\n";
 		std::cout << "\n";
 		std::cout << "Seleccione una opción válida [0-3]: ";
@@ -36,6 +36,8 @@ void submenuMedicos(const std::string& fichMedicos, std::vector<Medicos>& listaM
 			salir();
 			break;
 		case 2:
+			medico.editarMedico(fichMedicos, listaMedicos);
+			salir();
 			break;
 		case 3:
 			break;

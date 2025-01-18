@@ -41,7 +41,7 @@ void Pacientes::agregarPaciente(const std::string& fichPacientes) {
 
 
 void Pacientes::editarPaciente(const std::string& fichPacientes,std::vector<Pacientes>& listaPacientes) {
-	string dniBuscar,linea,dniPaciente,nuevoDNI,nuevoNombre,nuevoApellido,nuevoTelefono,nuevaDireccion,nuevaCP,nuevaAltaBaja,inputAltaBaja,nuevaLocalidad,nuevaNacionalidad;
+	string dniBuscar,linea,dniPaciente;
 	bool encontrado = false;
 	std::vector<Pacientes> pacientesActualizados;
 
@@ -95,7 +95,8 @@ void Pacientes::editarPaciente(const std::string& fichPacientes,std::vector<Paci
 			pacienteModificado.enfermedadCronica = nuevosDatos.enfermedadCronica;
 
 			std::cout << "\nModificación guardada para el paciente con DNI: " << dniPaciente << std::endl;
-			pacientesActualizados.push_back(pacienteModificado); // Agregar paciente modificado
+			// Agregar paciente modificado
+			pacientesActualizados.push_back(pacienteModificado); 
 		}
 		else {
 			// Agregar el paciente no modificado
@@ -112,7 +113,7 @@ void Pacientes::editarPaciente(const std::string& fichPacientes,std::vector<Paci
 	// Guardar todos los pacientes de nuevo en el archivo
 	std::ofstream archivoSalida(fichPacientes, std::ios::trunc);
 	for (const auto& paciente : pacientesActualizados) {
-		archivoSalida << paciente.toCSV() << std::endl; // Créalo según tu implementación
+		archivoSalida << paciente.toCSV() << std::endl;
 	}
 	archivoSalida.close();
 }
