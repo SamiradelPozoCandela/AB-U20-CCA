@@ -26,7 +26,7 @@ void submenuCitas(const std::string& fichCitas, std::vector<Citas>& listaCitas) 
 		std::cout << "3. Listar citas por urgencia o fecha\n";
 		std::cout << "0. Volver\n";
 		std::cout << "\n";
-		std::cout << "Seleccione una opción válida [0-4]: ";
+		std::cout << "Seleccione una opción válida [0-3]: ";
 		std::cin >> opcion;
 
 		switch (opcion) {
