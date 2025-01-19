@@ -129,7 +129,89 @@ void Citas::editarCancelarCita(const std::string& fichCitas, std::vector<Citas>&
 	archivoSalida.close();
 	std::cout << "Citas actualizadas correctamente." << std::endl;
 }
-void Citas::listarCitas(const std::string& fichCitas) {}
+
+
+void Citas::listarCitas(const std::string& fichCitas) {
+	std::string tipoBusqueda, linea, input;
+	bool encontrado = false;
+
+	// Textos en UTF-8
+	codificacionArchivos();
+	limpiarPantalla();
+
+	// Abrir archivo
+	std::ifstream archivo(fichCitas);
+
+	// Verificar si el archivo CSV está abierto
+	if (!archivo.is_open()) {
+		std::cerr << "Error al abrir el archivo: " << fichCitas << std::endl;
+		return;
+	}
+
+	// Seleccionar el tipo de búsqueda: Fecha o Urgencia
+	do {
+		std::cout << "\n¿Desea buscar por Fecha [F] o Urgencia [U]?: ";
+		std::getline(std::cin >> std::ws, input);
+		input = toupper(input[0]);
+
+		if (input == "F") {
+			std::cout << "\nIntroduce la fecha (dd/mm/aaaa): ";
+			std::getline(std::cin, input);
+			tipoBusqueda = input;  // Guardar la fecha para buscarla
+			break;
+		}
+		else if (input == "U") {
+			std::cout << "\nIntroduce la urgencia (Alta [A] | Baja [B]): ";
+			std::getline(std::cin, input);
+			input = toupper(input[0]);
+			if (input == "A") {
+				tipoBusqueda = "Alta";
+				break;
+			}
+			else if (input == "B") {
+				tipoBusqueda = "Baja";
+				break;
+			}
+			else {
+				std::cout << "\nPor favor, introduce 'A' para Alta o 'B' para Baja.\n";
+			}
+		}
+		std::cout << "Por favor, introduce 'F' para Fecha o 'U' para Urgencia.\n";
+	} while (true);
+
+	// Vector para almacenar las citas que coincidan con el criterio de búsqueda
+	std::vector<Citas> citasEncontradas;
+
+	// Bucle que recorre línea por línea del archivo
+	while (std::getline(archivo, linea)) {
+		std::stringstream ss(linea);
+		Citas cita = Citas::fromCSV(linea); // Cargar datos de la cita desde la línea
+
+		// Filtrar según la fecha o urgencia
+		if ((toupper(input[0]) == 'F' && cita.fecha == tipoBusqueda) ||
+			(toupper(input[0]) == 'U' && cita.urgencia == tipoBusqueda)) {
+			encontrado = true;
+			citasEncontradas.push_back(cita);  // Guardar la cita encontrada
+		}
+	}
+
+	// Cerrar el archivo
+	archivo.close();
+
+	// Mostrar las citas encontradas
+	if (encontrado) {
+		std::cout << "\nCitas encontradas:\n";
+		for (const auto& cita : citasEncontradas) {
+			std::cout << cita.toCSV() << "\n";  // Mostrar cada cita encontrada
+		}
+	}
+	else {
+		std::cout << "\nNo se encontraron citas que coincidan con el criterio de búsqueda.\n";
+	}
+
+	// Pausa al final
+	pausa();
+}
 
 
 void Citas::modificarDatosCita(Citas& cita) {
