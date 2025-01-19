@@ -42,8 +42,136 @@ void Citas::nuevaCita(const std::string& fichCitas) {
 }
 
 
-void Citas::editarCancelarCita(const std::string& fichCitas, std::vector<Citas>& listaCitas) {}
+void Citas::editarCancelarCita(const std::string& fichCitas, std::vector<Citas>& listaCitas) {
+	string input, buscarDNI, buscarFecha, buscarHora, linea, dni, fecha, hora;
+	char opcion;
+	bool encontrado = false;
+	std::vector<Citas> citasActualizadas;
+
+	// Textos en UTF - 8
+	codificacionArchivos();
+	limpiarPantalla();
+
+	// Abrir archivo
+	std::ifstream archivo(fichCitas);
+
+	// Verificar que el archivo se abre correctamente
+	if (!archivo.is_open()) {
+		std::cerr << "Error al abrir el archivo." << fichCitas << std::endl;
+		return;
+	}
+
+	// Para buscar la cita indicar el dni, fecha y hora
+	std::cout << "\nIntroduce el dni, fecha y hora de la cita del paciente";
+
+	std::cout << "n\DNI: ";
+	std::getline(std::cin >> std::ws, buscarDNI);
+	std::cout << "Fecha (dd/mm/aaaa): ";
+	std::getline(std::cin >> std::ws, buscarFecha);
+	std::cout << "Hora (hh:mm): ";
+	std::getline(std::cin >> std::ws, buscarHora);
+
+	// Buscar en el archivo
+	while (std::getline(archivo, linea)) {
+		std::stringstream ss(linea);
+		// Leer los campos del archivo
+		std::getline(ss, dni, ',');    
+		std::getline(ss, fecha, ',');   
+		std::getline(ss, hora, ',');    
+
+		if (dni == buscarDNI && fecha == buscarFecha && hora == buscarHora) {
+			encontrado = true;
+
+			// Cargar la cita actual
+			Citas citaModificada = Citas::fromCSV(linea);
+
+			// Mostrar datos actuales
+			std::cout << "\nDatos de la cita:\n" << linea << "\n";
+
+			// Preguntar qué desea modificar
+			std::cout << "¿Quieres modificar los datos (M) o solo el estado (E)? ";
+			std::cin >> opcion;
+			opcion = toupper(opcion);
+
+			if (opcion == 'M') {
+				// Modificar datos de la cita
+				modificarDatosCita(citaModificada);
+			}
+			else if (opcion == 'E') {
+				// Modificar solo el estado de la cita
+				modificarEstadoCita(citaModificada);
+			}
+			else {
+				std::cout << "Opción no válida, no se realizaron cambios." << std::endl;
+				return;
+			}
+
+			// Agregar la cita modificada
+			citasActualizadas.push_back(citaModificada);
+		}
+		else {
+			// Agregar citas no modificadas
+			citasActualizadas.push_back(Citas::fromCSV(linea));
+		}
+	}
+	archivo.close();
+
+	if (!encontrado) {
+		std::cout << "\nCita no encontrada." << std::endl;
+		return;
+	}
+
+	// Guardar todas las citas actualizadas de nuevo en el archivo
+	std::ofstream archivoSalida(fichCitas, std::ios::trunc);
+	for (const auto& cita : citasActualizadas) {
+		archivoSalida << cita.toCSV() << std::endl;
+	}
+	archivoSalida.close();
+	std::cout << "Citas actualizadas correctamente." << std::endl;
+}
 void Citas::listarCitas(const std::string& fichCitas) {}
+
+
+void Citas::modificarDatosCita(Citas& cita) {
+	// Llamamos al formulario de edición de cita
+	Citas nuevosDatos = Citas::formularioDatosCita(true); // Permitir edición de campos
+
+	// Modificamos los campos de la cita con los nuevos datos solo si no están vacíos
+	if (!nuevosDatos.paciente.empty()) cita.paciente = nuevosDatos.paciente;
+	if (!nuevosDatos.medico.empty()) cita.medico = nuevosDatos.medico;
+	if (!nuevosDatos.fecha.empty()) cita.fecha = nuevosDatos.fecha;
+	if (!nuevosDatos.hora.empty()) cita.hora = nuevosDatos.hora;
+	if (!nuevosDatos.motivo.empty()) cita.motivo = nuevosDatos.motivo;
+	if (!nuevosDatos.estado.empty()) cita.estado = nuevosDatos.estado;
+	if (!nuevosDatos.urgencia.empty()) cita.urgencia = nuevosDatos.urgencia;
+	if (!nuevosDatos.sala.empty()) cita.sala = nuevosDatos.sala;
+
+	std::cout << "Datos de la cita modificados correctamente." << std::endl;
+}
+
+
+void Citas::modificarEstadoCita(Citas& cita) {
+	std::string nuevoEstado;
+	std::cout << "Introduce el nuevo estado [En espera (E) | Atendido (A) | Cancelada (C)]: ";
+	std::getline(std::cin >> std::ws, nuevoEstado);
+	
+	nuevoEstado = toupper(nuevoEstado[0]);
+	if (nuevoEstado == "E") {
+		cita.estado = "En espera";
+	}
+	else if (nuevoEstado == "A") {
+		cita.estado = "Atendido"; 
+	}
+	else if (nuevoEstado == "C") {
+		cita.estado = "Cancelada";
+	} 
+	else {
+		std::cout << "Por favor, introduce 'E' para En espera, 'A' para Atendido o 'C' para Cancelar.\n" << std::endl;
+	}
+	std::cout << "El estado de la cita se ha modificado correctamente" << std::endl;
+}
+
+// Funciones comunes Citas
 
 Citas Citas::formularioDatosCita(bool editarCampos) {
 	Citas cita;
@@ -52,37 +180,48 @@ Citas Citas::formularioDatosCita(bool editarCampos) {
 	// idCita se genera solo (num aleatorio)
 	// Crear el generador y la distribución
 	std::random_device rd;        // Fuente de entropía
-	std::mt19937 generar(rd());       // Motor de generación (Mersenne Twister)
+	std::mt19937 generar(rd());       // Motor de generación
 	std::uniform_int_distribution<> distrib(1, 100); // Rango [1, 100]
 
 	// Generar un número
 	int numeroAleatorio = distrib(generar);
-	cita.idCita = numeroAleatorio;
+	cita.idCita = to_string(numeroAleatorio);
+
+	// DNI
+	std::cout << "DNI: ";
+	if (!editarCampos) std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	std::getline(std::cin, input);
+	if (!editarCampos || (editarCampos && !input.empty())) {
+		cita.dni = input;
+	}
              
 	// Paciente
 	std::cout << "Paciente: ";
-	if (!editarCampos) std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	std::getline(std::cin, input);
 	if (!editarCampos || (editarCampos && !input.empty())) {
 		cita.paciente = input;
 	}
 
 	// Médico
-	std::cout << "Médico: ";
+	std::cout << "Médico (user_id): ";
 	std::getline(std::cin, input);
 	if (!editarCampos || (editarCampos && !input.empty())) {
+		// Convertir cada carácter a minúscula
+		for (char& c : input) {
+			c = std::tolower(c);
+		}
 		cita.medico = input;
 	}
 
 	// Fecha
-	std::cout << "Fecha: ";
+	std::cout << "Fecha (dd/mm/aaaa): ";
 	std::getline(std::cin, input);
 	if (!editarCampos || (editarCampos && !input.empty())) {
 		cita.fecha = input;
 	}
 
 	// Hora
-	std::cout << "Hora: ";
+	std::cout << "Hora (hh:mm): ";
 	std::getline(std::cin, input);
 	if (!editarCampos || (editarCampos && !input.empty())) {
 		cita.hora = input;
@@ -99,23 +238,30 @@ Citas Citas::formularioDatosCita(bool editarCampos) {
 	do {
 		std::cout << "Estado [En blanco para nueva cita (intro) |  En espera (E) | Atendido (A) | Cancelada (C)]: ";
 		std::getline(std::cin, input);
-		if (input.empty() && editarCampos) break;
-		if (!editarCampos || (editarCampos && !input.empty())) {
-			input = toupper(input[0]);
-			if (input == "E") {
+		
+		// Cuando presione "Enter" (input está vacío)
+		if (input.empty() && !editarCampos) cita.estado = ""; break;
+
+		// Cuando el input no esté vacío
+		if (!input.empty()) {
+			// Convertir el primer carácter a mayúscula
+			char opcion = toupper(input[0]); 
+			if (opcion == 'E') {
 				cita.estado = "En espera"; break;
-			} else if (input == "A") {
+			}
+			else if (opcion == 'A') {
 				cita.estado = "Atendido"; break;
-			} else if (input == "C") {
+			}
+			else if (opcion == 'C') {
 				cita.estado = "Cancelada"; break;
 			}
 		}
-		std::cout << "Por favor, introduce 'E' para En espera, 'A' para Atendido, 'C' para Cancelada e 'intro' si es una cita nueva.\n";
+		std::cout << "Por favor, introduce 'E' para En espera, 'A' para Atendido, 'C' para Cancelar o presiona 'intro' si es una cita nueva.\n";
 	} while (true);
 
 	// Urgencia
 	do {
-		std::cout << "Estado [Alta (A) | Baja (B)]: ";
+		std::cout << "Urgencia [Alta (A) | Baja (B)]: ";
 		std::getline(std::cin, input);
 		if (input.empty() && editarCampos) break;
 		if (!editarCampos || (editarCampos && !input.empty())) {
@@ -129,7 +275,7 @@ Citas Citas::formularioDatosCita(bool editarCampos) {
 	} while (true);
 
 	// Sala
-	std::cout << "Motivo: ";
+	std::cout << "Sala: ";
 	std::getline(std::cin, input);
 	if (!editarCampos || (editarCampos && !input.empty())) {
 		cita.sala = input;

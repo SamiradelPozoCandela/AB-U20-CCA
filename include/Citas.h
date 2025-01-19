@@ -9,6 +9,7 @@ class Citas {
 private:
 
     string idCita;
+    string dni;
     string paciente;
     string medico;
     string fecha;
@@ -24,6 +25,7 @@ public:
         std::stringstream ss(linea);
         Citas c;
         std::getline(ss, c.idCita, ',');
+        std::getline(ss, c.dni, ',');
         std::getline(ss, c.paciente, ',');
         std::getline(ss, c.medico, ',');
         std::getline(ss, c.fecha, ',');
@@ -37,13 +39,15 @@ public:
     }
 
     std::string toCSV() const {
-        return idCita + ',' + paciente + "," + medico + "," + fecha + "," +
+        return idCita + ',' + dni + ',' + paciente + "," + medico + "," + fecha + "," +
                hora + "," + motivo + "," + estado + "," + urgencia + "," + sala;
     }
 
     void nuevaCita(const std::string& fichCitas);
     void editarCancelarCita(const std::string& fichCitas, std::vector<Citas>& listaCitas);
     void listarCitas(const std::string& fichCitas);
+    void modificarDatosCita(Citas& cita);
+    void modificarEstadoCita(Citas& cita);
     static Citas formularioDatosCita(bool editarCampos);
 };
 

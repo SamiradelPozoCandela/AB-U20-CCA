@@ -46,7 +46,7 @@ void submenuCitas(const std::string& fichCitas, std::vector<Citas>& listaCitas) 
 			return;
 		default:
 			std::cout << "\n";
-			std::cout << "Opción inválida, introduzca un número del 0 al 4.\n";
+			std::cout << "Opción inválida, introduzca un número del 0 al 3.\n";
 			pausa();
 			
 		}
