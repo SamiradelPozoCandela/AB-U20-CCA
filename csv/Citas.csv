@@ -1,1 +1,3 @@
 idCita,dni,paciente,medico,fecha,hora,motivo,estado,urgencia,sala
+87,789456123L,Cassandra Camel,ppepillo,02/02/2025,11:30,Vacuna,Cancelada,B,3
+9,456123987P,Pepe Pedrillo,ppepillo,28/01/2025,08:15,Dolor estomacal,En espera,A,1

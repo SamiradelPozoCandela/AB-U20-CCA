@@ -86,3 +86,10 @@ void codificacionArchivos() {
 		setlocale(LC_CTYPE, ".UTF-8");
 	#endif
 }
+
+// Función para quitar los espacios entre una string pasada
+std::string trim(const std::string& str) {
+	size_t start = str.find_first_not_of(" \t\n\r\f\v");
+	size_t end = str.find_last_not_of(" \t\n\r\f\v");
+	return (start == std::string::npos) ? "" : str.substr(start, end - start + 1);
+}
