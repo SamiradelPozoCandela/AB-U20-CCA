@@ -2,6 +2,7 @@
 #include <cctype>
 #include <string>
 #include <vector>
+#include <limits>
 #include <fstream>
 #include "../include/Medicos.h"
 #include "../include/funciones_comunes.h"

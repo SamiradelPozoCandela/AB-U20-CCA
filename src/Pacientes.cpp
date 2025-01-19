@@ -1,6 +1,8 @@
 #include <iostream>
 #include <cctype>
 #include <vector>
+#include <limits>
+#include <string>
 #include <fstream>
 #include "../include/Pacientes.h"
 #include "../include/funciones_comunes.h"
